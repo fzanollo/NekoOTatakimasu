@@ -2,6 +2,7 @@ package urgame;
 
 import flambe.Component;
 import flambe.display.ImageSprite;
+import flambe.display.TextSprite;
 import flambe.Entity;
 import flambe.input.Key;
 import flambe.script.CallFunction;
@@ -34,11 +35,13 @@ class LevelModel extends Component
     private var backgroundLayer :Entity;
     private var nekoLayer :Entity;
     private var kanaLayer :Entity;
+	private var gameUILayer:Entity;
 
     private var nekoArray :Array<Entity>;
     private var ctx :NekoContext;
 	
 	private var currentInput:String = "";
+	private var inputUITextSprite:TextSprite;
 
     public function new (ctx :NekoContext){
         this.ctx = ctx;
@@ -56,6 +59,7 @@ class LevelModel extends Component
 		//layers
         backgroundLayer.addChild(nekoLayer = new Entity());
         backgroundLayer.addChild(kanaLayer = new Entity());
+        backgroundLayer.addChild(gameUILayer = new Entity());
 		
 		//spawn script
 		var spawnScript = new Script();
@@ -86,11 +90,29 @@ class LevelModel extends Component
 					//unknown key, ignoring
 				
 				default:
-					currentInput += keyboardEvent.key.getName();
+					var key = keyboardEvent.key.getName();
+					if (key.length == 1) {
+						//por ahora ponele que es eso, es para evitar SHIFT, etc TODO hacer bien esta cosa
+						currentInput += key;						
+					}
 					trace('KEY PRESSED:  ${keyboardEvent.key.getName()}');
 			}
+			//update UI input text sprite
+			inputUITextSprite.text = currentInput; 
+			//POSIBLE TODO hacer que currentInput sea un value, para conectarse a los cambios y lesto (o no vale la pena?)
 		});
+		
+		createGameUI();
     }
+	
+	private function createGameUI() {
+		// add ui input text sprite
+		inputUITextSprite = new TextSprite(ctx.lightFont, currentInput);
+		
+		inputUITextSprite.setXY(System.stage.width / 2 - 40, System.stage.height - ctx.lightFont.size - 10);
+		
+		gameUILayer.addChild(new Entity().add(inputUITextSprite));
+	}
 	
 	private function checkForCoincidence(input:String) {
 		trace('CHECHING FOR COINCIDENCE');

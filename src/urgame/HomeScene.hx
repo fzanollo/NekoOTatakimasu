@@ -28,7 +28,7 @@ class HomeScene
         play.centerAnchor().setXY(System.stage.width / 2, System.stage.height / 2);
 		
         play.pointerDown.connect(function (_) {
-            ctx.pack.getSound("sounds/Coin").play();
+            //ctx.pack.getSound("sounds/Coin").play();
             ctx.enterPlayingScene();
         });
 		

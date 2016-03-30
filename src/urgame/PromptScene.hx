@@ -50,7 +50,7 @@ class PromptScene
             var button = new ImageSprite(ctx.pack.getTexture("buttons/"+name));
             button.setXY(x, 0);
             button.pointerDown.connect(function (_) {
-                ctx.pack.getSound("sounds/Coin").play();
+                //ctx.pack.getSound("sounds/Coin").play();
                 handler();
             });
             x += button.getNaturalWidth() + 20;
