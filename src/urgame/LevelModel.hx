@@ -133,8 +133,28 @@ class LevelModel extends Component
 
     override public function onUpdate (dt :Float)
     {
-		
+		nekoRemover();
     }
+	
+	private function nekoRemover() {
+		var nekoRemove = [];
+		
+		//check for nekos out of screen
+		for (i in 0...nekoArray.length) {
+			var neko = nekoArray[i];
+			var nekoComponent = neko.get(NekoComponent);
+			
+			if (nekoComponent.imageSprite.x._ < 0) {
+				nekoRemove.push(i);
+				trace(nekoArray.length);
+			} 
+		}
+		
+		//removes nekos in array
+		for (i in 0...nekoRemove.length) {
+			nekoArray.remove(nekoArray[nekoRemove[i]]);
+		}
+	}
 	
 	private function nekoMaker() {
 		var nekoComponent = new NekoComponent(nekoMaxSpeed, ctx);
