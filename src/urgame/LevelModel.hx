@@ -144,7 +144,7 @@ class LevelModel extends Component
 			var neko = nekoArray[i];
 			var nekoComponent = neko.get(NekoComponent);
 			
-			if (nekoComponent.imageSprite.x._ < 0) {
+			if (nekoComponent.imageSprite.x._ < -nekoComponent.imageSprite.getNaturalWidth()) {
 				nekoRemove.push(i);
 				trace(nekoArray.length);
 			} 
@@ -152,6 +152,7 @@ class LevelModel extends Component
 		
 		//removes nekos in array
 		for (i in 0...nekoRemove.length) {
+			nekoArray[nekoRemove[i]].dispose();
 			nekoArray.remove(nekoArray[nekoRemove[i]]);
 		}
 	}
