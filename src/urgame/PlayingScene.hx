@@ -30,6 +30,25 @@ class PlayingScene
         });
         scene.addChild(new Entity().add(scoreLabel));
 		
+		// Show the "You lose" label
+		var loseLabel = new TextSprite(ctx.lightFont);
+		level.lives.watch(function (lives, _) {
+			if (lives == 0) {
+				loseLabel.text = "You Lose!";
+			}
+		});
+		loseLabel.setXY(System.stage.width/3,System.stage.height/2.1);
+		scene.addChild(new Entity().add(loseLabel));
+	
+		
+		// Show a lives label on the top right
+        var livesLabel = new TextSprite(ctx.lightFont);
+        level.lives.watch(function (lives,_) {
+            livesLabel.text = "lives: "+lives;
+        });
+        livesLabel.setXY(System.stage.width - livesLabel.getNaturalWidth() - 60, 5);
+        scene.addChild(new Entity().add(livesLabel));
+		
         // Show a pause button
         var pause = new ImageSprite(ctx.pack.getTexture("buttons/Pause"));
         pause.setXY(System.stage.width-pause.texture.width-5, 5);

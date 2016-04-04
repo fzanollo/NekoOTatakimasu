@@ -26,6 +26,9 @@ class LevelModel extends Component
     /** The current score. */
     public var score (default, null) :Value<Int>;
 	
+	/** The current lives. */
+	public var lives (default, null) :Value<Int>;
+	
 	//level dificulty fields
 	public var nekoSpawnTime:Float = 4;
 	public var nekoMaxSpeed:Int = 2; 
@@ -47,6 +50,7 @@ class LevelModel extends Component
         this.ctx = ctx;
         nekoArray = [];
         score = new Value<Int>(0);
+		lives = new Value<Int>(3);
     }
 
     override public function onAdded () {
@@ -133,8 +137,26 @@ class LevelModel extends Component
 
     override public function onUpdate (dt :Float)
     {
+		checkForLifeLost();
 		nekoRemover();
     }
+	
+	private function checkForLifeLost() {
+		//check for nekos out of screen
+		for (i in 0...nekoArray.length) {
+			var neko = nekoArray[i];
+			var nekoComponent = neko.get(NekoComponent);
+			
+			if (nekoComponent.imageSprite.x._ < -nekoComponent.imageSprite.getNaturalWidth() / 2) {
+				if (nekoComponent.hit == false && lives._ != 0) {
+					lives._ -= 1;
+					nekoComponent.hit = true;
+				}
+			}
+		}
+	}
+	
+	
 	
 	private function nekoRemover() {
 		var nekoRemove = [];
@@ -146,11 +168,10 @@ class LevelModel extends Component
 			
 			if (nekoComponent.imageSprite.x._ < -nekoComponent.imageSprite.getNaturalWidth()) {
 				nekoRemove.push(i);
-				trace(nekoArray.length);
 			} 
 		}
 		
-		//removes nekos in array
+		//removes nekos in array and take out lives
 		for (i in 0...nekoRemove.length) {
 			nekoArray[nekoRemove[i]].dispose();
 			nekoArray.remove(nekoArray[nekoRemove[i]]);
