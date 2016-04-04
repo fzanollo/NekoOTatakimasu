@@ -15,7 +15,7 @@ class NekoComponent extends Component
 	private var maxY:Int;
 	
 	private var entity:Entity;
-	private var imageSprite:ImageSprite;
+	public var imageSprite:ImageSprite;
 	private var textSprite:TextSprite;
 	
 	private var ctx :NekoContext;

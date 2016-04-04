@@ -12,6 +12,7 @@ import flambe.script.Script;
 import flambe.script.Sequence;
 import flambe.System;
 import flambe.util.Value;
+import urgame.neko.InputManager;
 import urgame.neko.NekoComponent;
 import urgame.NekoContext;
 
@@ -22,7 +23,7 @@ import urgame.NekoContext;
  */
 
 class LevelModel extends Component
-{	
+{
     /** The current score. */
     public var score (default, null) :Value<Int>;
 	
@@ -40,7 +41,6 @@ class LevelModel extends Component
     private var nekoArray :Array<Entity>;
     private var ctx :NekoContext;
 	
-	private var currentInput:String = "";
 	private var inputUITextSprite:TextSprite;
 
     public function new (ctx :NekoContext){
@@ -69,49 +69,23 @@ class LevelModel extends Component
 			new CallFunction(nekoMaker)
 		])));
 		
-		//connect to keyboard events
-		System.keyboard.up.connect(function(keyboardEvent) {
-			switch (keyboardEvent.key) {
-				case Key.Enter:
-					if (currentInput.length > 0) {
-						checkForCoincidence(currentInput);
-						currentInput = "";
-						trace('ENTER PRESSED');
-					}
-				
-				case Key.Backspace:
-					if (currentInput.length > 0) {
-						var deleted = currentInput.substring(currentInput.length - 1, currentInput.length); //for debug
-						currentInput = currentInput.substring(0, currentInput.length - 1);
-						trace('BACKSPACE PRESSED, DELETED: $deleted');
-					}
-				
-				case Key.Unknown(keyCode):
-					//unknown key, ignoring
-				
-				default:
-					var key = keyboardEvent.key.getName();
-					if (key.length == 1) {
-						//por ahora ponele que es eso, es para evitar SHIFT, etc TODO hacer bien esta cosa
-						currentInput += key;						
-					}
-					trace('KEY PRESSED:  ${keyboardEvent.key.getName()}');
-			}
-			//update UI input text sprite
-			inputUITextSprite.text = currentInput; 
-			//POSIBLE TODO hacer que currentInput sea un value, para conectarse a los cambios y lesto (o no vale la pena?)
-		});
-		
-		createGameUI();
+		createInputTextAndManager(); //nombre de mierda, cambiar
     }
 	
-	private function createGameUI() {
+	private function createInputTextAndManager() {
 		// add ui input text sprite
-		inputUITextSprite = new TextSprite(ctx.lightFont, currentInput);
-		
+		inputUITextSprite = new TextSprite(ctx.lightFont, "");
 		inputUITextSprite.setXY(System.stage.width / 2 - 40, System.stage.height - ctx.lightFont.size - 10);
-		
 		gameUILayer.addChild(new Entity().add(inputUITextSprite));
+		
+		//input management
+		var inputManager = new InputManager();
+		inputManager.enterPressed.connect(checkForCoincidence);
+		inputManager.currentInput.changed.connect(function(currentInput, _) {
+			//update UI input text sprite
+			inputUITextSprite.text = currentInput; 
+		});
+		owner.add(inputManager);
 	}
 	
 	private function checkForCoincidence(input:String) {
