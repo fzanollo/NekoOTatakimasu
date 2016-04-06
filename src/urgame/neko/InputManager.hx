@@ -16,6 +16,7 @@ class InputManager extends Component
 	public var currentInput (default, null):Value<String>;
 	
 	private var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	private var levelPaused = false;
 
 	public function new() {
 		enterPressed = new Signal1();
@@ -25,23 +26,28 @@ class InputManager extends Component
 		System.keyboard.up.connect(keyboardEventUpHandler);
 	}
 	
+	public function pause() { levelPaused = true; }
+	public function unpause() { levelPaused = false; }
+	
 	private function keyboardEventUpHandler(keyboardEvent:KeyboardEvent) {
-		switch (keyboardEvent.key) {
-			case Key.Enter:
-				if (currentInput._.length > 0) {
-					enterPressed.emit(currentInput._);
-					currentInput._ = "";
-				}
-			
-			case Key.Backspace:
-				deleteCharacter();
-			
-			case Key.Unknown(keyCode):
-				//unknown key, ignoring
-			
-			default:
-				var key = keyboardEvent.key.getName();
-				if (currentInput._.length < 4 && isCharacter(key)) currentInput._ += key;
+		if (!levelPaused) {
+			switch (keyboardEvent.key) {
+				case Key.Enter:
+					if (currentInput._.length > 0) {
+						enterPressed.emit(currentInput._);
+						currentInput._ = "";
+					}
+				
+				case Key.Backspace:
+					deleteCharacter();
+				
+				case Key.Unknown(keyCode):
+					//unknown key, ignoring
+				
+				default:
+					var key = keyboardEvent.key.getName();
+					if (currentInput._.length < 4 && isCharacter(key)) currentInput._ += key;
+			}			
 		}
 	}
 	
