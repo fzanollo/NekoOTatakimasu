@@ -15,10 +15,12 @@ class NekoComponent extends Component
 	private var maxY:Int;
 	
 	private var entity:Entity;
-	private var imageSprite:ImageSprite;
+	public  var imageSprite:ImageSprite;
 	private var textSprite:TextSprite;
 	
 	private var ctx :NekoContext;
+	
+	public var hit :Bool = false;
 	
 	public function new(maxSpeed:Int, ctx :NekoContext) {
 		this.ctx = ctx;
