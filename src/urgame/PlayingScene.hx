@@ -30,17 +30,6 @@ class PlayingScene
         });
         scene.addChild(new Entity().add(scoreLabel));
 		
-		// Show the "You lose" label
-		var loseLabel = new TextSprite(ctx.lightFont);
-		level.lives.watch(function (lives, _) {
-			if (lives == 0) {
-				loseLabel.text = "You Lose!";
-			}
-		});
-		loseLabel.setXY(System.stage.width/3,System.stage.height/2.1);
-		scene.addChild(new Entity().add(loseLabel));
-	
-		
 		// Show a lives label on the top right
         var livesLabel = new TextSprite(ctx.lightFont);
         level.lives.watch(function (lives,_) {
@@ -66,6 +55,42 @@ class PlayingScene
             ]);
         });
         scene.addChild(new Entity().add(pause));
+		
+		// Show the "You lose" prompt
+		level.lives.watch(function (lives, _) {
+			if (lives == 0) {
+				ctx.showPrompt(ctx.messages.get("you lose! and scored: "+level.score._), [
+					
+					"Replay", function () {
+						ctx.director.unwindToScene(scene);
+						ctx.enterPlayingScene();
+					},
+					"Home", function () {
+						// Go back to the main menu, unwinding first so the transition looks right
+						ctx.director.unwindToScene(scene);
+						ctx.enterHomeScene();
+					},
+            ]);
+			}
+		});
+		
+		// Show the "you win" prompt
+		level.score.watch(function (score, _) {
+			if (score == 100) {
+				ctx.showPrompt(ctx.messages.get("you win!"), [
+					
+					"Play", function () {
+						ctx.director.unwindToScene(scene);
+						ctx.enterPlayingScene();
+					},
+					"Home", function () {
+						// Go back to the main menu, unwinding first so the transition looks right
+						ctx.director.unwindToScene(scene);
+						ctx.enterHomeScene();
+					},
+				]);
+			}
+		});
 		
         return scene;
     }
