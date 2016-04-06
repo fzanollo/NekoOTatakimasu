@@ -9,6 +9,7 @@ import flambe.System;
 class NekoComponent extends Component
 {
 	public var speed:Int;
+	public var hit = false;
 	
 	private var moving:Bool = false;
 	private var romaji:String;
