@@ -21,6 +21,8 @@ class NekoComponent extends Component
 	
 	private var ctx :NekoContext;
 	
+	public var hit :Bool = false;
+	
 	public function new(maxSpeed:Int, ctx :NekoContext) {
 		this.ctx = ctx;
 		entity = new Entity();
