@@ -85,7 +85,7 @@ class LevelModel extends Component
 			//update UI input text sprite
 			inputUITextSprite.text = currentInput; 
 		});
-		owner.add(inputManager);
+		owner.addChild(new Entity().add(inputManager));
 	}
 	
 	private function checkForCoincidence(input:String) {
