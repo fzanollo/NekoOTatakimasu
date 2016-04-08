@@ -12,6 +12,7 @@ import flambe.display.ImageSprite;
 import flambe.display.Sprite;
 import flambe.util.Promise;
 import flambe.display.TextSprite;
+import ui.ButtonBehaviour;
 import urgame.NekoContext;
 
 class CreditsScene
@@ -31,6 +32,23 @@ class CreditsScene
         label.y._ = System.stage.height / 3 - 100;
 		
 		scene.addChild(new Entity().add(label));
+		
+		/////testing button
+		
+		var button = new Entity();
+		
+		var imageSprite = new ImageSprite(ctx.pack.getTexture("buttons/Home"));
+		imageSprite.setXY(System.stage.width / 2, System.stage.height / 2).centerAnchor();
+		
+		var buttonBehaviour = new ButtonBehaviour();
+		buttonBehaviour.setHandler(function(pointerEvent) {
+			trace('HOLA HOLA HOLA, CUIDADO CON LA OLA $pointerEvent');
+		});
+		
+		button.add(imageSprite).add(buttonBehaviour);
+		scene.addChild(button);
+		
+		////
 		
 		//Home button
 		var home = new ImageSprite(ctx.pack.getTexture("buttons/Home"));

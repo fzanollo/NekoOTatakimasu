@@ -5,6 +5,8 @@
 package urgame;
 
 import flambe.Entity;
+import flambe.swf.Library;
+import flambe.swf.MoviePlayer;
 import flambe.System;
 import flambe.animation.Ease;
 import flambe.display.FillSprite;
