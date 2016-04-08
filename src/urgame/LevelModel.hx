@@ -16,12 +16,6 @@ import urgame.neko.InputManager;
 import urgame.neko.NekoComponent;
 import urgame.NekoContext;
 
-/* TODO:
- * borrar los nekos al pasarse de la pantalla
- * agregar textsprite en pantalla que vaya poniendo el input
- * agregar al kana manager las otras formas aceptadas de romaji
- */
-
 class LevelModel extends Component
 {
     /** The current score. */
@@ -45,6 +39,7 @@ class LevelModel extends Component
     private var ctx :NekoContext;
 	
 	private var inputUITextSprite:TextSprite;
+	private var inputManager:InputManager;
 
     public function new (ctx :NekoContext){
         this.ctx = ctx;
@@ -83,13 +78,26 @@ class LevelModel extends Component
 		gameUILayer.addChild(new Entity().add(inputUITextSprite));
 		
 		//input management
-		var inputManager = new InputManager();
+		inputManager = new InputManager();
 		inputManager.enterPressed.connect(checkForCoincidence);
 		inputManager.currentInput.changed.connect(function(currentInput, _) {
 			//update UI input text sprite
 			inputUITextSprite.text = currentInput; 
 		});
 		owner.addChild(new Entity().add(inputManager));
+	}
+	
+	public function pause() {
+		inputManager.pause();		
+	}
+	
+	public function unpause() {
+		inputManager.unpause();
+	}
+	
+	override public function onRemoved() {
+		super.onRemoved();
+		inputManager.owner.dispose();
 	}
 	
 	private function checkForCoincidence(input:String) {
@@ -129,8 +137,6 @@ class LevelModel extends Component
 			}
 		}
 	}
-	
-	
 	
 	private function nekoRemover() {
 		var nekoRemove = [];
