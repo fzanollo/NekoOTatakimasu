@@ -16,12 +16,6 @@ import urgame.neko.InputManager;
 import urgame.neko.NekoComponent;
 import urgame.NekoContext;
 
-/* TODO:
- * borrar los nekos al pasarse de la pantalla
- * agregar textsprite en pantalla que vaya poniendo el input
- * agregar al kana manager las otras formas aceptadas de romaji
- */
-
 class LevelModel extends Component
 {
     /** The current score. */
@@ -143,8 +137,6 @@ class LevelModel extends Component
 			}
 		}
 	}
-	
-	
 	
 	private function nekoRemover() {
 		var nekoRemove = [];

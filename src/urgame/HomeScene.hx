@@ -29,7 +29,7 @@ class HomeScene
 		
         play.pointerDown.connect(function (_) {
             //ctx.pack.getSound("sounds/Coin").play();
-            ctx.enterPlayingScene();
+            ctx.enterLevelSelectionScene();
         });
 		
         scene.addChild(new Entity().add(play));
