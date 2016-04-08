@@ -47,11 +47,25 @@ class NekoContext
             animate ? new SlideTransition(0.5, Ease.quadOut) : null);
     }
 
+
+	public function enterOptionsScene (animate :Bool = true)
+    {
+        director.unwindToScene(OptionsScene.create(this),
+            animate ? new SlideTransition(0.5, Ease.quadOut) : null);
+    }
+	
+	public function enterCreditsScene (animate :Bool = true)
+    {
+        director.unwindToScene(CreditsScene.create(this),
+            animate ? new SlideTransition(0.5, Ease.quadOut) : null);
+    }
+
     public function enterLevelSelectionScene (animate :Bool = true)
     {
         director.unwindToScene(LevelSelectionScene.create(this),
             animate ? new SlideTransition(0.5, Ease.quadOut) : null);
     }
+
 
     public function showPrompt (text :String, buttons :Array<Dynamic>)
     {
