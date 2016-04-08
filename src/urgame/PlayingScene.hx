@@ -42,10 +42,12 @@ class PlayingScene
         var pause = new ImageSprite(ctx.pack.getTexture("buttons/Pause"));
         pause.setXY(System.stage.width-pause.texture.width-5, 5);
         pause.pointerDown.connect(function (_) {
+			level.pause();
             ctx.showPrompt(ctx.messages.get("paused"), [
                 "Play", function () {
                     // Unpause by unwinding to the original scene
                     ctx.director.unwindToScene(scene);
+					level.unpause();
                 },
                 "Home", function () {
                     // Go back to the main menu, unwinding first so the transition looks right

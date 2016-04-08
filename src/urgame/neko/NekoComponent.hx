@@ -9,18 +9,17 @@ import flambe.System;
 class NekoComponent extends Component
 {
 	public var speed:Int;
+	public var hit = false;
 	
 	private var moving:Bool = false;
 	private var romaji:String;
 	private var maxY:Int;
 	
 	private var entity:Entity;
-	public  var imageSprite:ImageSprite;
+	public var imageSprite:ImageSprite;
 	private var textSprite:TextSprite;
 	
 	private var ctx :NekoContext;
-	
-	public var hit :Bool = false;
 	
 	public function new(maxSpeed:Int, ctx :NekoContext) {
 		this.ctx = ctx;

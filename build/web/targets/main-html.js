@@ -115,6 +115,9 @@ Std.__name__ = true;
 Std["is"] = function(v,t) {
 	return js_Boot.__instanceof(v,t);
 };
+Std.instance = function(value,c) {
+	if((value instanceof c)) return value; else return null;
+};
 Std.string = function(s) {
 	return js_Boot.__string_rec(s,"");
 };
@@ -6281,7 +6284,7 @@ urgame_HomeScene.create = function(ctx) {
 	var play = new flambe_display_ImageSprite(ctx.pack.getTexture("buttons/PlayBig"));
 	play.centerAnchor().setXY(flambe_System.get_stage().get_width() * 1 / 2,flambe_System.get_stage().get_height() * 1 / 2);
 	play.get_pointerDown().connect(function(_) {
-		ctx.enterPlayingScene();
+		ctx.enterLevelSelectionScene();
 	});
 	scene.addChild(new flambe_Entity().add(play));
 	var credits = new flambe_display_ImageSprite(ctx.pack.getTexture("buttons/Play"));
@@ -6300,7 +6303,6 @@ urgame_HomeScene.create = function(ctx) {
 	return scene;
 };
 var urgame_LevelModel = function(ctx) {
-	this.currentInput = "";
 	this.nekoMaxSpeed = 2;
 	this.nekoSpawnTime = 4;
 	flambe_Component.call(this);
@@ -6317,7 +6319,6 @@ urgame_LevelModel.prototype = $extend(flambe_Component.prototype,{
 		return "LevelModel_0";
 	}
 	,onAdded: function() {
-		var _g1 = this;
 		this.owner.addChild(this.worldLayer = new flambe_Entity());
 		this.backgroundLayer = new flambe_Entity().add(new flambe_display_ImageSprite(this.ctx.pack.getTexture("wood_background")));
 		this.worldLayer.addChild(this.backgroundLayer);
@@ -6327,41 +6328,29 @@ urgame_LevelModel.prototype = $extend(flambe_Component.prototype,{
 		var spawnScript = new flambe_script_Script();
 		this.worldLayer.add(spawnScript);
 		spawnScript.run(new flambe_script_Repeat(new flambe_script_Sequence([new flambe_script_Delay(this.nekoSpawnTime),new flambe_script_CallFunction($bind(this,this.nekoMaker))])));
-		flambe_System.get_keyboard().up.connect(function(keyboardEvent) {
-			{
-				var _g = keyboardEvent.key;
-				switch(Type.enumIndex(_g)) {
-				case 81:
-					if(_g1.currentInput.length > 0) {
-						_g1.checkForCoincidence(_g1.currentInput);
-						_g1.currentInput = "";
-						console.log("ENTER PRESSED");
-					}
-					break;
-				case 74:
-					if(_g1.currentInput.length > 0) {
-						var deleted = _g1.currentInput.substring(_g1.currentInput.length - 1,_g1.currentInput.length);
-						_g1.currentInput = _g1.currentInput.substring(0,_g1.currentInput.length - 1);
-						console.log("BACKSPACE PRESSED, DELETED: " + deleted);
-					}
-					break;
-				case 100:
-					var keyCode = _g[2];
-					break;
-				default:
-					var key = Type.enumConstructor(keyboardEvent.key);
-					if(key.length == 1) _g1.currentInput += key;
-					console.log("KEY PRESSED:  " + Type.enumConstructor(keyboardEvent.key));
-				}
-			}
-			_g1.inputUITextSprite.set_text(_g1.currentInput);
-		});
-		this.createGameUI();
+		this.createInputTextAndManager();
 	}
-	,createGameUI: function() {
-		this.inputUITextSprite = new flambe_display_TextSprite(this.ctx.lightFont,this.currentInput);
+	,createInputTextAndManager: function() {
+		var _g = this;
+		this.inputUITextSprite = new flambe_display_TextSprite(this.ctx.lightFont,"");
 		this.inputUITextSprite.setXY(flambe_System.get_stage().get_width() / 2 - 40,flambe_System.get_stage().get_height() - this.ctx.lightFont.size - 10);
 		this.gameUILayer.addChild(new flambe_Entity().add(this.inputUITextSprite));
+		this.inputManager = new urgame_neko_InputManager();
+		this.inputManager.enterPressed.connect($bind(this,this.checkForCoincidence));
+		this.inputManager.currentInput.get_changed().connect(function(currentInput,_) {
+			_g.inputUITextSprite.set_text(currentInput);
+		});
+		this.owner.addChild(new flambe_Entity().add(this.inputManager));
+	}
+	,pause: function() {
+		this.inputManager.pause();
+	}
+	,unpause: function() {
+		this.inputManager.unpause();
+	}
+	,onRemoved: function() {
+		flambe_Component.prototype.onRemoved.call(this);
+		this.inputManager.owner.dispose();
 	}
 	,checkForCoincidence: function(input) {
 		console.log("CHECHING FOR COINCIDENCE");
@@ -6434,6 +6423,36 @@ urgame_LevelModel.prototype = $extend(flambe_Component.prototype,{
 	}
 	,__class__: urgame_LevelModel
 });
+var urgame_LevelSelectionScene = function() { };
+$hxClasses["urgame.LevelSelectionScene"] = urgame_LevelSelectionScene;
+urgame_LevelSelectionScene.__name__ = true;
+urgame_LevelSelectionScene.create = function(ctx) {
+	var scene = new flambe_Entity();
+	var buttonTexture = ctx.pack.getTexture("buttons/ButtonBackground");
+	var _g = 0;
+	while(_g < 2) {
+		var i = _g++;
+		var _g1 = 0;
+		while(_g1 < 2) {
+			var j = _g1++;
+			var buttonEntity = new flambe_Entity();
+			var buttonBackground = new flambe_display_ImageSprite(buttonTexture);
+			var buttonBackgroundWidth = buttonBackground.getNaturalWidth();
+			var buttonBackgroundHeight = buttonBackground.getNaturalHeight();
+			buttonBackground.get_pointerDown().connect(function(_) {
+				ctx.enterPlayingScene();
+			});
+			var levelNumber = 2 * j + 1 * i + 1;
+			var buttonText = new flambe_display_TextSprite(ctx.lightFont,Std.string(levelNumber));
+			buttonText.centerAnchor().setXY(buttonBackgroundWidth / 2,buttonBackgroundHeight / 2);
+			buttonEntity.add(buttonBackground);
+			buttonEntity.addChild(new flambe_Entity().add(buttonText));
+			Std.instance(buttonEntity.getComponent("Sprite_3"),flambe_display_ImageSprite).setXY(buttonBackgroundWidth * i,buttonBackgroundHeight * j);
+			scene.addChild(buttonEntity);
+		}
+	}
+	return scene;
+};
 var urgame_Main = function() { };
 $hxClasses["urgame.Main"] = urgame_Main;
 urgame_Main.__name__ = true;
@@ -6481,6 +6500,10 @@ urgame_NekoContext.prototype = {
 	,enterCreditsScene: function(animate) {
 		if(animate == null) animate = true;
 		this.director.unwindToScene(urgame_CreditsScene.create(this),animate?new flambe_scene_SlideTransition(0.5,flambe_animation_Ease.quadOut):null);
+	}
+	,enterLevelSelectionScene: function(animate) {
+		if(animate == null) animate = true;
+		this.director.unwindToScene(urgame_LevelSelectionScene.create(this),animate?new flambe_scene_SlideTransition(0.5,flambe_animation_Ease.quadOut):null);
 	}
 	,showPrompt: function(text,buttons) {
 		this.director.pushScene(urgame_PromptScene.create(this,text,buttons));
@@ -6532,8 +6555,10 @@ urgame_PlayingScene.create = function(ctx) {
 	var pause = new flambe_display_ImageSprite(ctx.pack.getTexture("buttons/Pause"));
 	pause.setXY(flambe_System.get_stage().get_width() - pause.texture.get_width() - 5,5);
 	pause.get_pointerDown().connect(function(_2) {
+		level.pause();
 		ctx.showPrompt(ctx.messages.get("paused"),["Play",function() {
 			ctx.director.unwindToScene(scene);
+			level.unpause();
 		},"Home",function() {
 			ctx.director.unwindToScene(scene);
 			ctx.enterHomeScene();
@@ -6628,6 +6653,63 @@ urgame_PromptScene.create = function(ctx,text,buttons) {
 	scene.addChild(row.add(sprite));
 	return scene;
 };
+var urgame_neko_InputManager = function() {
+	this.levelPaused = false;
+	this.alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	flambe_Component.call(this);
+	this.enterPressed = new flambe_util_Signal1();
+	this.currentInput = new flambe_util_Value("");
+	flambe_System.get_keyboard().up.connect($bind(this,this.keyboardEventUpHandler));
+};
+$hxClasses["urgame.neko.InputManager"] = urgame_neko_InputManager;
+urgame_neko_InputManager.__name__ = true;
+urgame_neko_InputManager.__super__ = flambe_Component;
+urgame_neko_InputManager.prototype = $extend(flambe_Component.prototype,{
+	get_name: function() {
+		return "InputManager_7";
+	}
+	,pause: function() {
+		this.levelPaused = true;
+	}
+	,unpause: function() {
+		this.levelPaused = false;
+	}
+	,keyboardEventUpHandler: function(keyboardEvent) {
+		if(!this.levelPaused) {
+			var _g = keyboardEvent.key;
+			switch(Type.enumIndex(_g)) {
+			case 81:
+				if(this.currentInput.get__().length > 0) {
+					this.enterPressed.emit(this.currentInput.get__());
+					this.currentInput.set__("");
+				}
+				break;
+			case 74:
+				this.deleteCharacter();
+				break;
+			case 100:
+				var keyCode = _g[2];
+				break;
+			default:
+				var key = Type.enumConstructor(keyboardEvent.key);
+				if(this.currentInput.get__().length < 4 && this.isCharacter(key)) {
+					var _g1 = this.currentInput;
+					_g1.set__(_g1.get__() + key);
+				}
+			}
+		}
+	}
+	,deleteCharacter: function() {
+		if(this.currentInput.get__().length > 0) {
+			var deleted = this.currentInput.get__().substring(this.currentInput.get__().length - 1,this.currentInput.get__().length);
+			this.currentInput.set__(this.currentInput.get__().substring(0,this.currentInput.get__().length - 1));
+		}
+	}
+	,isCharacter: function(key) {
+		return this.alphabet.indexOf(key) > -1;
+	}
+	,__class__: urgame_neko_InputManager
+});
 var urgame_neko_KanaManager = function() { };
 $hxClasses["urgame.neko.KanaManager"] = urgame_neko_KanaManager;
 urgame_neko_KanaManager.__name__ = true;
@@ -6644,8 +6726,8 @@ urgame_neko_KanaManager.getRandomElement = function(map) {
 	return mapArray[Std.random(mapArray.length)];
 };
 var urgame_neko_NekoComponent = function(maxSpeed,ctx) {
-	this.hit = false;
 	this.moving = false;
+	this.hit = false;
 	flambe_Component.call(this);
 	this.ctx = ctx;
 	this.entity = new flambe_Entity();
@@ -6717,7 +6799,7 @@ flambe_System.volume = new flambe_animation_AnimatedFloat(1);
 flambe_System._platform = flambe_platform_html_HtmlPlatform.instance;
 flambe_System._calledInit = false;
 flambe_Log.logger = flambe_System.createLogger("flambe");
-flambe_asset_Manifest.__meta__ = { obj : { assets : [{ locale_pt : [{ bytes : 111, md5 : "6123b1afc417347b496b411995d04730", name : "messages.ini"}], locale_es : [{ bytes : 114, md5 : "6f6f738f15dfdb91158e42ca91deea93", name : "messages.ini"}], bootstrap : [{ bytes : 236, md5 : "39270899fe8d72dbace04ff22a880986", name : "progress/Background.png"},{ bytes : 233, md5 : "c6c9901883e4775f6a3628d8cdc3dae9", name : "progress/Fill.png"},{ bytes : 1802, md5 : "faf83a7352d4f0e97cfa53e1d39e079e", name : "progress/Left.png"},{ bytes : 1812, md5 : "e437406653b6b0473600c0e45fbef0a7", name : "progress/Right.png"}], locale : [{ bytes : 109, md5 : "c8c097d325d285219f666a8b0ce60bfa", name : "messages.ini"}], main : [{ bytes : 12613, md5 : "9671a8b71d2d78710f507fcc81a1a88d", name : "buttons/Home.png"},{ bytes : 3224, md5 : "9f8d3a4f8cb58e76ee0c3506da631bbb", name : "buttons/Pause.png"},{ bytes : 11533, md5 : "b59cdcb396427e323707f8374b28e70c", name : "buttons/Play.png"},{ bytes : 22389, md5 : "122533058ee29c9b9c3646f7d3f02aa1", name : "buttons/PlayBig.png"},{ bytes : 13530, md5 : "0b948a042a62f1d82204eaab62efc66c", name : "buttons/Replay.png"},{ bytes : 12515, md5 : "fee5bd38c164ab48e5073703e187f842", name : "buttons/Tweet.png"},{ bytes : 22640, md5 : "06b36bc435bdcb5dd36661448107decd", name : "buttons/Volume.png"},{ bytes : 11645, md5 : "b687be6b49d0460ed35930d0177b7254", name : "fonts/Dark.fnt"},{ bytes : 5456, md5 : "4bd084e77f1f1e075a971d4a1b428c34", name : "fonts/Dark.png"},{ bytes : 54862, md5 : "0a815d4835c4ee2c532624e4883cee29", name : "fonts/japanFont.fnt"},{ bytes : 223411, md5 : "47e7f408cab24413626583f33d46e974", name : "fonts/japanFont.png"},{ bytes : 11646, md5 : "60cb9d33b8089291276f0e999abd5646", name : "fonts/Light.fnt"},{ bytes : 7009, md5 : "a3576efee2a052c8bed6d277e7b9e097", name : "fonts/Light.png"},{ bytes : 74754, md5 : "f7c9fad820f8e964ab6726133a66c86b", name : "menu_background.jpg"},{ bytes : 13453, md5 : "6cb61c02d44ba37fb05721c7177457e0", name : "neko.png"},{ bytes : 47923, md5 : "068e6f27875137c433732dbec5f54f5c", name : "options_background.jpg"},{ bytes : 4596, md5 : "20e8d7db296f31325bdd08b38b85b2b6", name : "sounds/Coin.mp3"},{ bytes : 6677, md5 : "3145c135ecf88b16456c50c6128218de", name : "sounds/Coin.ogg"},{ bytes : 5223, md5 : "2aa5a0a04c1e2640c17122f340758ee8", name : "sounds/Explode.mp3"},{ bytes : 8614, md5 : "5871e545c2932379bcaf32eca7c595e4", name : "sounds/Explode.ogg"},{ bytes : 1043, md5 : "d38cbfa6fda881ad0565338ab6f1618f", name : "sounds/Hurt.mp3"},{ bytes : 4184, md5 : "4412af33d0d28b975f65c131590654fd", name : "sounds/Hurt.ogg"},{ bytes : 89234, md5 : "ab44706d9f66ab634b886485da16796d", name : "wood_background.jpg"}]}]}};
+flambe_asset_Manifest.__meta__ = { obj : { assets : [{ locale_pt : [{ bytes : 111, md5 : "6123b1afc417347b496b411995d04730", name : "messages.ini"}], locale_es : [{ bytes : 114, md5 : "6f6f738f15dfdb91158e42ca91deea93", name : "messages.ini"}], bootstrap : [{ bytes : 236, md5 : "39270899fe8d72dbace04ff22a880986", name : "progress/Background.png"},{ bytes : 233, md5 : "c6c9901883e4775f6a3628d8cdc3dae9", name : "progress/Fill.png"},{ bytes : 1802, md5 : "faf83a7352d4f0e97cfa53e1d39e079e", name : "progress/Left.png"},{ bytes : 1812, md5 : "e437406653b6b0473600c0e45fbef0a7", name : "progress/Right.png"}], locale : [{ bytes : 109, md5 : "c8c097d325d285219f666a8b0ce60bfa", name : "messages.ini"}], main : [{ bytes : 17648, md5 : "0fdb0497f6c2bfa98eba0cc0abe60e21", name : "buttons/ButtonBackground.png"},{ bytes : 12613, md5 : "9671a8b71d2d78710f507fcc81a1a88d", name : "buttons/Home.png"},{ bytes : 3224, md5 : "9f8d3a4f8cb58e76ee0c3506da631bbb", name : "buttons/Pause.png"},{ bytes : 11533, md5 : "b59cdcb396427e323707f8374b28e70c", name : "buttons/Play.png"},{ bytes : 22389, md5 : "122533058ee29c9b9c3646f7d3f02aa1", name : "buttons/PlayBig.png"},{ bytes : 13530, md5 : "0b948a042a62f1d82204eaab62efc66c", name : "buttons/Replay.png"},{ bytes : 12515, md5 : "fee5bd38c164ab48e5073703e187f842", name : "buttons/Tweet.png"},{ bytes : 22640, md5 : "06b36bc435bdcb5dd36661448107decd", name : "buttons/Volume.png"},{ bytes : 11645, md5 : "b687be6b49d0460ed35930d0177b7254", name : "fonts/Dark.fnt"},{ bytes : 5456, md5 : "4bd084e77f1f1e075a971d4a1b428c34", name : "fonts/Dark.png"},{ bytes : 54862, md5 : "0a815d4835c4ee2c532624e4883cee29", name : "fonts/japanFont.fnt"},{ bytes : 223411, md5 : "47e7f408cab24413626583f33d46e974", name : "fonts/japanFont.png"},{ bytes : 11646, md5 : "60cb9d33b8089291276f0e999abd5646", name : "fonts/Light.fnt"},{ bytes : 7009, md5 : "a3576efee2a052c8bed6d277e7b9e097", name : "fonts/Light.png"},{ bytes : 74754, md5 : "f7c9fad820f8e964ab6726133a66c86b", name : "menu_background.jpg"},{ bytes : 13453, md5 : "6cb61c02d44ba37fb05721c7177457e0", name : "neko.png"},{ bytes : 47923, md5 : "068e6f27875137c433732dbec5f54f5c", name : "options_background.jpg"},{ bytes : 4596, md5 : "20e8d7db296f31325bdd08b38b85b2b6", name : "sounds/Coin.mp3"},{ bytes : 6677, md5 : "3145c135ecf88b16456c50c6128218de", name : "sounds/Coin.ogg"},{ bytes : 5223, md5 : "2aa5a0a04c1e2640c17122f340758ee8", name : "sounds/Explode.mp3"},{ bytes : 8614, md5 : "5871e545c2932379bcaf32eca7c595e4", name : "sounds/Explode.ogg"},{ bytes : 1043, md5 : "d38cbfa6fda881ad0565338ab6f1618f", name : "sounds/Hurt.mp3"},{ bytes : 4184, md5 : "4412af33d0d28b975f65c131590654fd", name : "sounds/Hurt.ogg"},{ bytes : 89234, md5 : "ab44706d9f66ab634b886485da16796d", name : "wood_background.jpg"}]}]}};
 flambe_asset_Manifest._supportsCrossOrigin = (function() {
 	var detected = (function() {
 		if(js_Browser.get_navigator().userAgent.indexOf("Linux; U; Android") >= 0) return false;
