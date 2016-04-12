@@ -44,8 +44,10 @@ class ButtonBehaviour extends Component
 	}
 	
 	function pointerUpHandler(pointerEvent:PointerEvent) {
-		pointerDown = false;
-		if (onButtonPressed != null) onButtonPressed(pointerEvent);
+		if (pointerDown && onButtonPressed != null) {
+			pointerDown = false;
+			onButtonPressed(pointerEvent);
+		}
 	}
 	
 }
