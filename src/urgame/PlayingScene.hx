@@ -14,11 +14,11 @@ import urgame.NekoContext;
 class PlayingScene
 {
     /** Creates the scene where the gameplay happens. */
-    public static function create (ctx :NekoContext)
+    public static function create (ctx :NekoContext, levelNumber:Int)
     {
         var scene = new Entity();
 		
-        var level = new LevelModel(ctx);
+        var level = new LevelModel(ctx, 1);
         ctx.level = level;
         scene.add(level);
 		

@@ -13,6 +13,7 @@ import flambe.script.Sequence;
 import flambe.System;
 import flambe.util.Value;
 import urgame.neko.InputManager;
+import urgame.neko.KanaManager;
 import urgame.neko.NekoComponent;
 import urgame.NekoContext;
 
@@ -25,8 +26,9 @@ class LevelModel extends Component
 	public var lives (default, null) :Value<Int>;
 	
 	//level dificulty fields
-	public var nekoSpawnTime:Float = 4;
+	public var nekoSpawnTime:Float = 4; //seconds
 	public var nekoMaxSpeed:Int = 2; 
+	public var nekoMinSpeed:Int = 1; 
 
 	//layers
 	private var worldLayer:Entity;
@@ -40,12 +42,24 @@ class LevelModel extends Component
 	
 	private var inputUITextSprite:TextSprite;
 	private var inputManager:InputManager;
+	
+	private var levelNumber:Int;
+	private var kanaManager:KanaManager = new KanaManager();
 
-    public function new (ctx :NekoContext){
+    public function new (ctx :NekoContext, levelNumber:Int){
         this.ctx = ctx;
         nekoArray = [];
         score = new Value<Int>(0);
 		lives = new Value<Int>(3);
+		
+		//init level specific stuff
+		this.levelNumber = levelNumber;
+		nekoMinSpeed = levelNumber;
+		nekoMaxSpeed = levelNumber + 2;
+		nekoSpawnTime = levelNumber + (levelNumber * 30) / 100;
+		kanaManager.setFirstXKanasToUse(KanaManager.HIRAGANA, levelNumber * 5);
+		
+		trace('level info: nekoMinSpeed $nekoMinSpeed, nekoMaxSpeed $nekoMaxSpeed, nekoSpawnTime $nekoSpawnTime');
     }
 
     override public function onAdded () {
@@ -59,6 +73,10 @@ class LevelModel extends Component
         backgroundLayer.addChild(nekoLayer = new Entity());
         backgroundLayer.addChild(kanaLayer = new Entity());
         backgroundLayer.addChild(gameUILayer = new Entity());
+		
+		////show hiragana meaning at the beginning of level
+		//var levelScript = new Script();
+		
 		
 		//spawn script
 		var spawnScript = new Script();
@@ -159,7 +177,7 @@ class LevelModel extends Component
 	}
 	
 	private function nekoMaker() {
-		var nekoComponent = new NekoComponent(nekoMaxSpeed, ctx);
+		var nekoComponent = new NekoComponent(nekoMaxSpeed, kanaManager, ctx);
 		var neko = new Entity().add(nekoComponent);
 		
 		//add to objects array
