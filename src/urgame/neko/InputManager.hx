@@ -7,6 +7,7 @@ import flambe.input.KeyboardEvent;
 import flambe.script.Script;
 import flambe.System;
 import flambe.util.Signal1;
+import flambe.util.SignalConnection;
 import flambe.util.Value;
 import haxe.Timer;
 
@@ -17,13 +18,14 @@ class InputManager extends Component
 	
 	private var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	private var levelPaused = false;
+	private var keyboardupSignalConnection:SignalConnection;
 
 	public function new() {
 		enterPressed = new Signal1();
 		currentInput = new Value<String>("");
 		
 		//connect to keyboard events
-		System.keyboard.up.connect(keyboardEventUpHandler);
+		keyboardupSignalConnection = System.keyboard.up.connect(keyboardEventUpHandler);
 	}
 	
 	public function pause() { levelPaused = true; }
@@ -60,5 +62,10 @@ class InputManager extends Component
 	
 	private function isCharacter(key:String):Bool {
 		return alphabet.indexOf(key) > -1;
+	}
+	
+	override public function dispose() {
+		super.dispose();
+		keyboardupSignalConnection.dispose();
 	}
 }

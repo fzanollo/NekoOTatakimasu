@@ -11,6 +11,7 @@ import flambe.script.Repeat;
 import flambe.script.Script;
 import flambe.script.Sequence;
 import flambe.System;
+import flambe.util.SignalConnection;
 import flambe.util.Value;
 import urgame.neko.InputManager;
 import urgame.neko.KanaManager;
@@ -45,6 +46,8 @@ class LevelModel extends Component
 	
 	private var levelNumber:Int;
 	private var kanaManager:KanaManager = new KanaManager();
+	private var enterPressedSignalConnection:SignalConnection;
+	private var currentInputSignalConnection:SignalConnection;
 
     public function new (ctx :NekoContext, levelNumber:Int){
         this.ctx = ctx;
@@ -97,8 +100,8 @@ class LevelModel extends Component
 		
 		//input management
 		inputManager = new InputManager();
-		inputManager.enterPressed.connect(checkForCoincidence);
-		inputManager.currentInput.changed.connect(function(currentInput, _) {
+		enterPressedSignalConnection = inputManager.enterPressed.connect(checkForCoincidence);
+		currentInputSignalConnection = inputManager.currentInput.changed.connect(function(currentInput, _) {
 			//update UI input text sprite
 			inputUITextSprite.text = currentInput; 
 		});
@@ -188,5 +191,14 @@ class LevelModel extends Component
 		
 		//move
 		nekoComponent.move();
+	}
+	
+	override public function dispose() {
+		super.dispose();
+		
+		//disconnect signals
+		enterPressedSignalConnection.dispose();
+		currentInputSignalConnection.dispose();
+		inputManager.dispose();
 	}
 }
