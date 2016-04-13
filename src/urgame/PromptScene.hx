@@ -14,6 +14,7 @@ import flambe.display.TextSprite;
 import flambe.scene.Scene;
 import flambe.util.Promise;
 import urgame.NekoContext;
+import ui.ButtonBehaviour;
 
 class PromptScene
 {
@@ -47,14 +48,18 @@ class PromptScene
             var name = buttons[ii++];
             var handler = buttons[ii++];
 			
-            var button = new ImageSprite(ctx.pack.getTexture("buttons/"+name));
-            button.setXY(x, 0);
-            button.pointerDown.connect(function (_) {
+			// button
+			var button = new Entity();
+            var buttonSprite = new ImageSprite(ctx.pack.getTexture("buttons/"+name));
+            buttonSprite.setXY(x, 0);
+			var buttonBehaviour = new ButtonBehaviour();
+            buttonBehaviour.setHandler(function (pointerEvent) {
                 //ctx.pack.getSound("sounds/Coin").play();
                 handler();
             });
-            x += button.getNaturalWidth() + 20;
-            row.addChild(new Entity().add(button));
+            x += buttonSprite.getNaturalWidth() + 20;
+			button.add(buttonSprite).add(buttonBehaviour);
+            row.addChild(button);
         }
 		
         var bounds = Sprite.getBounds(row);

@@ -12,6 +12,7 @@ import flambe.display.ImageSprite;
 import flambe.display.Sprite;
 import flambe.util.Promise;
 import flambe.display.TextSprite;
+import ui.ButtonBehaviour;
 import urgame.NekoContext;
 
 class OptionsScene
@@ -33,26 +34,34 @@ class OptionsScene
 		scene.addChild(new Entity().add(label));
 		
 		//Volume button
-        var volume = new ImageSprite(ctx.pack.getTexture("buttons/Volume"));
-        volume.centerAnchor().setXY(System.stage.width * 1 / 2, System.stage.height * 1 / 2);
-		
-        //volume.pointerDown.connect(function (_) {
-            ////ctx.pack.getSound("sounds/Coin").play();
-        //});
-		
-		scene.addChild(new Entity().add(volume));
+		var volume = new Entity();
+        var volumeSprite = new ImageSprite(ctx.pack.getTexture("buttons/Volume"));
+        volumeSprite.centerAnchor().setXY(System.stage.width * 1 / 2, System.stage.height * 1 / 2);
+		var volumeBehaviour = new ButtonBehaviour();
+        volumeBehaviour.setHandler(function (pointerEvent) {
+			if (ctx.muted == false) {
+				System.volume._ = 0;
+				ctx.muted = true;
+			} else {
+				System.volume._ = 1;
+				ctx.muted = false;
+			};
+        });
+		volume.add(volumeSprite).add(volumeBehaviour);
+		scene.addChild(volume);
 		
 		
 		//Home button
-		var home = new ImageSprite(ctx.pack.getTexture("buttons/Home"));
-		home.centerAnchor().setXY(System.stage.width-home.texture.width/2 - 15,System.stage.height-home.texture.height/2 - 5);
-		
-		home.pointerDown.connect(function (_) {
+		var home = new Entity();
+		var homeSprite = new ImageSprite(ctx.pack.getTexture("buttons/Home"));
+		homeSprite.centerAnchor().setXY(System.stage.width-homeSprite.texture.width/2 - 15,System.stage.height-homeSprite.texture.height/2 - 5);
+		var homeBehaviour = new ButtonBehaviour();
+		homeBehaviour.setHandler(function (pointerEvent) {
             //ctx.pack.getSound("sounds/Coin").play();
             ctx.enterHomeScene();
         });
-		
-        scene.addChild(new Entity().add(home));
+		home.add(homeSprite).add(homeBehaviour);
+        scene.addChild(home);
 		
         return scene;
     }

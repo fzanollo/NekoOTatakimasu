@@ -2,24 +2,34 @@ package urgame.neko;
 
 class KanaManager
 {
-	private static var kanasInUse:String = HIRAGANA; //TODO dar a elegir entre hiragana y katakana
+	private var syllabaryInUse:String = HIRAGANA;
+	private var kanasInUse:Array<String> = new Array();
 	
 	public function new() {
 		
 	}
 	
-	public static function getRandomKana():String {
-		if (kanasInUse == HIRAGANA) {
+	public function setFirstXKanasToUse(syllabary:String, quantity:Int) {
+		this.syllabaryInUse = syllabary;
+		this.kanasInUse = getFirstNKeys((syllabaryInUse == HIRAGANA) ? hiraganaToRomanji : katakanaToRomanji, quantity);
+	}
+	
+	public function getRandomKana():String {
+		return kanasInUse[Std.random(kanasInUse.length)];
+	}
+	
+	public function getRandomKanaFromAll():String {
+		if (syllabaryInUse == HIRAGANA) {
 			return getRandomElement(romanjiToHiragana);
 		} else {
 			return getRandomElement(romanjiToKatakana);
 		}
 	}
 	
-	public static function getRomanji(kana:String):String {
+	public function getRomanji(kana:String):String {
 		var romaji:String;
 		
-		if (kanasInUse == HIRAGANA) {
+		if (syllabaryInUse == HIRAGANA) {
 			romaji = hiraganaToRomanji.get(kana);
 		} else {
 			romaji = katakanaToRomanji.get(kana);
@@ -32,7 +42,22 @@ class KanaManager
 		}
 	}
 	
-	private static function getRandomElement(map:Map<String, String>):String {
+	private function getFirstNKeys(completeMap:Map<String, String>, quantity:Int):Array<String> {
+		var result:Array<String> = new Array();
+		var iterator = completeMap.keys();
+		
+		for (i in 0...quantity) {
+			if (iterator.hasNext()) {
+				var key = iterator.next();
+				result.push(key);
+			} else {
+				break;
+			}
+		}
+		return result;
+	}
+	
+	private function getRandomElement(map:Map<String, String>):String {
 		var mapArray = Lambda.array(map); // Convert the map values into an array
 		return mapArray[Std.random(mapArray.length)]; // Return a random element from the array
 	}

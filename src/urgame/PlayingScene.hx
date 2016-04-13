@@ -8,17 +8,18 @@ import flambe.Entity;
 import flambe.System;
 import flambe.display.ImageSprite;
 import flambe.display.TextSprite;
+import ui.ButtonBehaviour;
 import urgame.LevelModel;
 import urgame.NekoContext;
 
 class PlayingScene
 {
     /** Creates the scene where the gameplay happens. */
-    public static function create (ctx :NekoContext)
+    public static function create (ctx :NekoContext, levelNumber:Int)
     {
         var scene = new Entity();
 		
-        var level = new LevelModel(ctx);
+        var level = new LevelModel(ctx, levelNumber);
         ctx.level = level;
         scene.add(level);
 		
@@ -39,9 +40,11 @@ class PlayingScene
         scene.addChild(new Entity().add(livesLabel));
 		
         // Show a pause button
-        var pause = new ImageSprite(ctx.pack.getTexture("buttons/Pause"));
-        pause.setXY(System.stage.width-pause.texture.width-5, 5);
-        pause.pointerDown.connect(function (_) {
+		var pause = new Entity();
+        var pauseSprite = new ImageSprite(ctx.pack.getTexture("buttons/Pause"));
+        pauseSprite.setXY(System.stage.width-pauseSprite.texture.width-5, 5);
+        var pauseBehaviour = new ButtonBehaviour();
+		pauseBehaviour.setHandler(function (pointerEvent) {
 			level.pause();
             ctx.showPrompt(ctx.messages.get("paused"), [
                 "Play", function () {
@@ -56,7 +59,8 @@ class PlayingScene
                 },
             ]);
         });
-        scene.addChild(new Entity().add(pause));
+		pause.add(pauseSprite).add(pauseBehaviour);
+        scene.addChild(pause);
 		
 		// Show the "You lose" prompt
 		level.lives.watch(function (lives, _) {
@@ -65,7 +69,7 @@ class PlayingScene
 					
 					"Replay", function () {
 						ctx.director.unwindToScene(scene);
-						ctx.enterPlayingScene();
+						ctx.enterPlayingScene(levelNumber);
 					},
 					"Home", function () {
 						// Go back to the main menu, unwinding first so the transition looks right
@@ -83,7 +87,7 @@ class PlayingScene
 					
 					"Play", function () {
 						ctx.director.unwindToScene(scene);
-						ctx.enterPlayingScene();
+						ctx.enterPlayingScene(levelNumber + 1); //TODO esto es por ahora, de hecho puede generar problemas (no se sabe el lvl max)
 					},
 					"Home", function () {
 						// Go back to the main menu, unwinding first so the transition looks right

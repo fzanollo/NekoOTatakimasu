@@ -23,11 +23,12 @@ class LevelSelectionScene
 				var buttonBackgroundWidth = buttonBackground.getNaturalWidth();
 				var buttonBackgroundHeight = buttonBackground.getNaturalHeight();
 				
+				var levelNumber = (2 * j + 1 * i) + 1;
+				
 				buttonBackground.pointerDown.connect(function(_) {
-					ctx.enterPlayingScene();
+					ctx.enterPlayingScene(levelNumber);
 				});
 				
-				var levelNumber = (2 * j + 1 * i) + 1;
 				var buttonText = new TextSprite(ctx.lightFont, Std.string(levelNumber));
 				buttonText.centerAnchor().setXY(buttonBackgroundWidth / 2, buttonBackgroundHeight / 2);
 				

@@ -24,6 +24,9 @@ class NekoContext
 
     /** The currently active level. */
     public var level :LevelModel;
+	
+	/** Global configs. */
+	public var muted :Bool = false;
 
     public function new (mainPack :AssetPack, localePack :AssetPack, director :Director){
         this.pack = mainPack;
@@ -41,9 +44,9 @@ class NekoContext
             animate ? new SlideTransition(0.5, Ease.quadOut) : null);
     }
 
-    public function enterPlayingScene (animate :Bool = true)
+    public function enterPlayingScene (animate :Bool = true, levelNumber:Int)
     {
-        director.unwindToScene(PlayingScene.create(this),
+        director.unwindToScene(PlayingScene.create(this, levelNumber),
             animate ? new SlideTransition(0.5, Ease.quadOut) : null);
     }
 
