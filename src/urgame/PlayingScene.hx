@@ -8,6 +8,7 @@ import flambe.Entity;
 import flambe.System;
 import flambe.display.ImageSprite;
 import flambe.display.TextSprite;
+import ui.ButtonBehaviour;
 import urgame.LevelModel;
 import urgame.NekoContext;
 
@@ -39,9 +40,11 @@ class PlayingScene
         scene.addChild(new Entity().add(livesLabel));
 		
         // Show a pause button
-        var pause = new ImageSprite(ctx.pack.getTexture("buttons/Pause"));
-        pause.setXY(System.stage.width-pause.texture.width-5, 5);
-        pause.pointerDown.connect(function (_) {
+		var pause = new Entity();
+        var pauseSprite = new ImageSprite(ctx.pack.getTexture("buttons/Pause"));
+        pauseSprite.setXY(System.stage.width-pauseSprite.texture.width-5, 5);
+        var pauseBehaviour = new ButtonBehaviour();
+		pauseBehaviour.setHandler(function (pointerEvent) {
 			level.pause();
             ctx.showPrompt(ctx.messages.get("paused"), [
                 "Play", function () {
@@ -56,7 +59,8 @@ class PlayingScene
                 },
             ]);
         });
-        scene.addChild(new Entity().add(pause));
+		pause.add(pauseSprite).add(pauseBehaviour);
+        scene.addChild(pause);
 		
 		// Show the "You lose" prompt
 		level.lives.watch(function (lives, _) {

@@ -14,6 +14,7 @@ import flambe.display.ImageSprite;
 import flambe.display.Sprite;
 import flambe.util.Promise;
 import urgame.NekoContext;
+import ui.ButtonBehaviour;
 
 class HomeScene
 {
@@ -27,38 +28,41 @@ class HomeScene
         scene.addChild(new Entity().add(background));
 		
 		//Play button
-        var play = new ImageSprite(ctx.pack.getTexture("buttons/PlayBig"));
-        play.centerAnchor().setXY(System.stage.width * 1 / 2, System.stage.height * 1 / 2);
-		
-        play.pointerDown.connect(function (_) {
-            //ctx.pack.getSound("sounds/Coin").play();
-            ctx.enterLevelSelectionScene();
-        });
-		
-		scene.addChild(new Entity().add(play));
+		var play = new Entity();
+		var playSprite = new ImageSprite(ctx.pack.getTexture("buttons/PlayBig"));
+		playSprite.centerAnchor().setXY(System.stage.width * 1 / 2, System.stage.height * 1 / 2);
+		var playBehaviour = new ButtonBehaviour();
+		playBehaviour.setHandler(function(pointerEvent) {
+			ctx.enterLevelSelectionScene();
+		});
+		play.add(playSprite).add(playBehaviour);
+		scene.addChild(play);
 		
 		//Credits button
-		var credits = new ImageSprite(ctx.pack.getTexture("buttons/Play"));
-		credits.setScale(0.5);
-		credits.centerAnchor().setXY(System.stage.width-credits.texture.width*3/2,System.stage.height-credits.texture.height/3 - 5);
-		
-		credits.pointerDown.connect(function (_) {
+		var credits = new Entity();
+		var creditsSprite = new ImageSprite(ctx.pack.getTexture("buttons/Play"));
+		creditsSprite.setScale(0.5);
+		creditsSprite.centerAnchor().setXY(System.stage.width-creditsSprite.texture.width*3/2,System.stage.height-creditsSprite.texture.height/3 - 5);
+		var creditsBehaviour = new ButtonBehaviour();
+		creditsBehaviour.setHandler(function(pointerEvent){
             //ctx.pack.getSound("sounds/Coin").play();
             ctx.enterCreditsScene();
         });
-		
-        scene.addChild(new Entity().add(credits));
+		credits.add(creditsSprite).add(creditsBehaviour);
+        scene.addChild(credits);
 		
 		//Options button
-		var options = new ImageSprite(ctx.pack.getTexture("buttons/Play"));
-		options.centerAnchor().setXY(System.stage.width-options.texture.width/2 - 15,System.stage.height-options.texture.height/2 - 5);
+		var options = new Entity();
+		var optionsSprite = new ImageSprite(ctx.pack.getTexture("buttons/Play"));
+		optionsSprite.centerAnchor().setXY(System.stage.width-optionsSprite.texture.width/2 - 15,System.stage.height-optionsSprite.texture.height/2 - 5);
 		
-		options.pointerDown.connect(function (_) {
+		var optionsBehaviour = new ButtonBehaviour(); 
+		optionsBehaviour.setHandler(function (pointerEvent) {
             //ctx.pack.getSound("sounds/Coin").play();
             ctx.enterOptionsScene();
         });
-		
-        scene.addChild(new Entity().add(options));
+		options.add(optionsSprite).add(optionsBehaviour);
+        scene.addChild(options);
 		
         return scene;
     }

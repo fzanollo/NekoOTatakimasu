@@ -32,34 +32,19 @@ class CreditsScene
         label.y._ = System.stage.height / 3 - 100;
 		
 		scene.addChild(new Entity().add(label));
-		
-		/////testing button
-		
-		var button = new Entity();
-		
-		var imageSprite = new ImageSprite(ctx.pack.getTexture("buttons/Home"));
-		imageSprite.setXY(System.stage.width / 2, System.stage.height / 2).centerAnchor();
-		
-		var buttonBehaviour = new ButtonBehaviour();
-		buttonBehaviour.setHandler(function(pointerEvent) {
-			trace('HOLA HOLA HOLA, CUIDADO CON LA OLA $pointerEvent');
-		});
-		
-		button.add(imageSprite).add(buttonBehaviour);
-		scene.addChild(button);
-		
-		////
+
 		
 		//Home button
-		var home = new ImageSprite(ctx.pack.getTexture("buttons/Home"));
-		home.centerAnchor().setXY(System.stage.width-home.texture.width/2 - 15,System.stage.height-home.texture.height/2 - 5);
-		
-		home.pointerDown.connect(function (_) {
+		var home = new Entity();
+		var homeSprite = new ImageSprite(ctx.pack.getTexture("buttons/Home"));
+		homeSprite.centerAnchor().setXY(System.stage.width-homeSprite.texture.width/2 - 15,System.stage.height-homeSprite.texture.height/2 - 5);
+		var homeBehaviour = new ButtonBehaviour();
+		homeBehaviour.setHandler(function (pointerEvent) {
             //ctx.pack.getSound("sounds/Coin").play();
             ctx.enterHomeScene();
         });
 		
-        scene.addChild(new Entity().add(home));
+        scene.addChild(home);
 		
         return scene;
     }

@@ -24,6 +24,9 @@ class NekoContext
 
     /** The currently active level. */
     public var level :LevelModel;
+	
+	/** Global configs. */
+	public var muted :Bool = false;
 
     public function new (mainPack :AssetPack, localePack :AssetPack, director :Director){
         this.pack = mainPack;
