@@ -50,7 +50,6 @@ class KanaManager
 			if (iterator.hasNext()) {
 				var key = iterator.next();
 				result.push(key);
-				trace('ADD TO KANAS IN USE number $i : $key');
 			} else {
 				break;
 			}

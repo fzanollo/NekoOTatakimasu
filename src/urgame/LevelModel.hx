@@ -59,7 +59,7 @@ class LevelModel extends Component
 		nekoSpawnTime = levelNumber + (levelNumber * 30) / 100;
 		kanaManager.setFirstXKanasToUse(KanaManager.HIRAGANA, levelNumber * 5);
 		
-		trace('level info: nekoMinSpeed $nekoMinSpeed, nekoMaxSpeed $nekoMaxSpeed, nekoSpawnTime $nekoSpawnTime');
+		trace('level info: level: $levelNumber, nekoMinSpeed $nekoMinSpeed, nekoMaxSpeed $nekoMaxSpeed, nekoSpawnTime $nekoSpawnTime');
     }
 
     override public function onAdded () {

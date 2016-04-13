@@ -19,7 +19,7 @@ class PlayingScene
     {
         var scene = new Entity();
 		
-        var level = new LevelModel(ctx, 1);
+        var level = new LevelModel(ctx, levelNumber);
         ctx.level = level;
         scene.add(level);
 		
@@ -69,7 +69,7 @@ class PlayingScene
 					
 					"Replay", function () {
 						ctx.director.unwindToScene(scene);
-						ctx.enterPlayingScene();
+						ctx.enterPlayingScene(levelNumber);
 					},
 					"Home", function () {
 						// Go back to the main menu, unwinding first so the transition looks right
@@ -87,7 +87,7 @@ class PlayingScene
 					
 					"Play", function () {
 						ctx.director.unwindToScene(scene);
-						ctx.enterPlayingScene();
+						ctx.enterPlayingScene(levelNumber + 1); //TODO esto es por ahora, de hecho puede generar problemas (no se sabe el lvl max)
 					},
 					"Home", function () {
 						// Go back to the main menu, unwinding first so the transition looks right

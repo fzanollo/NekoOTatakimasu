@@ -44,7 +44,7 @@ class NekoContext
             animate ? new SlideTransition(0.5, Ease.quadOut) : null);
     }
 
-    public function enterPlayingScene (animate :Bool = true, ?levelNumber:Int)
+    public function enterPlayingScene (animate :Bool = true, levelNumber:Int)
     {
         director.unwindToScene(PlayingScene.create(this, levelNumber),
             animate ? new SlideTransition(0.5, Ease.quadOut) : null);
