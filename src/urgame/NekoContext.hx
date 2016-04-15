@@ -7,6 +7,7 @@ import flambe.scene.Director;
 import flambe.scene.SlideTransition;
 import flambe.util.MessageBundle;
 import haxe.Json;
+import urgame.neko.KanaManager;
 
 /** Contains all the game state that needs to get passed around. */
 class NekoContext
@@ -31,8 +32,10 @@ class NekoContext
 	
 	/** Levels info */
 	public var levelsInfo:Dynamic;
-	
 	public var levelMax:Int = 1;
+	
+	/** KanaManager */
+	public var kanaManager:KanaManager = new KanaManager();
 
     public function new (mainPack :AssetPack, localePack :AssetPack, director :Director){
         this.pack = mainPack;

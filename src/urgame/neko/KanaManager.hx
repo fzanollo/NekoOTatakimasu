@@ -3,19 +3,26 @@ package urgame.neko;
 class KanaManager
 {
 	private var syllabaryInUse:String = HIRAGANA;
-	private var kanasInUse:Array<String> = new Array();
+	
+	private var newKana:Array<String> = new Array(); //kanas of the current level
+	private var oldKana:Array<String> = new Array(); //kanas of the already passed levels
 	
 	public function new() {
 		
 	}
 	
-	public function setKanasToUse(syllabary:String, romanjis:Array<String>) {
+	public function setNewKanas(syllabary:String, kanas:Array<String>) {
 		this.syllabaryInUse = syllabary;
-		loadKanasInUse((syllabaryInUse == HIRAGANA) ? romanjiToHiragana : romanjiToKatakana, romanjis);
+		if (newKana.length > 0) oldKana.concat(newKana); //the old 'newKana' is now old xD
+		newKana = kanas;
 	}
 	
-	public function getRandomKana():String {
-		return kanasInUse[Std.random(kanasInUse.length)];
+	public function getRandomNewKana():String {
+		return newKana[Std.random(newKana.length)];
+	}
+	
+	public function getRandomOldKana():String {
+		return oldKana[Std.random(oldKana.length)];
 	}
 	
 	public function getRandomKanaFromAll():String {
@@ -39,12 +46,6 @@ class KanaManager
 			return romaji.substring(0, romaji.length - 1);
 		} else {
 			return romaji;
-		}
-	}
-	
-	private function loadKanasInUse(completeMap:Map<String, String>, romanjis:Array<String>) {
-		for (romanji in romanjis) {
-			kanasInUse.push(completeMap.get(romanji));
 		}
 	}
 	

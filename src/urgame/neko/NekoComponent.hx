@@ -31,7 +31,7 @@ class NekoComponent extends Component
 		imageSprite.setScale(0.6).setXY(System.stage.width, Std.random(maxY));
 		
 		//text random kana
-		textSprite = new TextSprite(ctx.japanFont, kanaManager.getRandomKana());
+		textSprite = new TextSprite(ctx.japanFont, kanaManager.getRandomNewKana());
 		textSprite.centerAnchor().setXY(imageSprite.getNaturalWidth() / 2, imageSprite.getNaturalHeight() / 2);
 		romaji = kanaManager.getRomanji(textSprite.text);
 		
