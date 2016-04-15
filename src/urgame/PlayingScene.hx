@@ -27,7 +27,7 @@ class PlayingScene
         var scoreLabel = new TextSprite(ctx.lightFont);
         scoreLabel.setXY(5, 5);
         level.score.watch(function (score,_) {
-            scoreLabel.text = ""+score;
+            scoreLabel.text = score + ' of ${level.goal}';
         });
         scene.addChild(new Entity().add(scoreLabel));
 		
@@ -82,7 +82,7 @@ class PlayingScene
 		
 		// Show the "you win" prompt
 		level.score.watch(function (score, _) {
-			if (score == 100) {
+			if (score == level.goal) {
 				ctx.showPrompt(ctx.messages.get("you win!"), [
 					
 					"Play", function () {

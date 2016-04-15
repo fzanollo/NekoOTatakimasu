@@ -27,9 +27,11 @@ class LevelModel extends Component
 	public var lives (default, null) :Value<Int>;
 	
 	//level dificulty fields
-	public var nekoSpawnTime:Float = 4; //seconds
-	public var nekoMaxSpeed:Int = 2; 
-	public var nekoMinSpeed:Int = 1; 
+	public var nekoMinSpawnTime:Float = 4; //seconds
+	public var nekoMaxSpawnTime:Float = 4;
+	public var nekoMinSpeed:Int = 1; //per frame
+	public var nekoMaxSpeed:Int = 2;
+	public var goal:Int = 100;
 
 	//layers
 	private var worldLayer:Entity;
@@ -55,15 +57,22 @@ class LevelModel extends Component
         score = new Value<Int>(0);
 		lives = new Value<Int>(3);
 		
-		//init level specific stuff
 		this.levelNumber = levelNumber;
 		
-		nekoMinSpeed = levelNumber;
-		nekoMaxSpeed = levelNumber + 2;
-		nekoSpawnTime = levelNumber + (levelNumber * 30) / 100;
-		kanaManager.setFirstXKanasToUse(KanaManager.HIRAGANA, levelNumber * 5);
+		//get level info
+		var levelInfo = Reflect.field(ctx.levelsInfo, Std.string(levelNumber));
 		
-		trace('level info: level: $levelNumber, nekoMinSpeed $nekoMinSpeed, nekoMaxSpeed $nekoMaxSpeed, nekoSpawnTime $nekoSpawnTime');
+		nekoMinSpeed = levelInfo.minSpeed;
+		nekoMaxSpeed = levelInfo.maxSpeed;
+		nekoMinSpawnTime = levelInfo.minSpawnTime;
+		nekoMaxSpawnTime = levelInfo.maxSpawnTime;
+		
+		goal = levelInfo.goal;
+		
+		kanaManager.setKanasToUse(KanaManager.HIRAGANA, levelInfo.kanas); //it's called kanas but it actually is romanji... change that (maybe)
+		//TODO every new lvl shows only new kana
+		
+		trace('level: $levelNumber, level info: $levelInfo');
     }
 
     override public function onAdded () {
@@ -81,12 +90,11 @@ class LevelModel extends Component
 		////show hiragana meaning at the beginning of level
 		//var levelScript = new Script();
 		
-		
 		//spawn script
 		var spawnScript = new Script();
 		worldLayer.add(spawnScript);
 		spawnScript.run(new Repeat(new Sequence([
-			new Delay(nekoSpawnTime),
+			new Delay(nekoMinSpawnTime), //TODO cambiar la forma de spawnear para poder tener spawnTimes random
 			new CallFunction(nekoMaker)
 		])));
 		

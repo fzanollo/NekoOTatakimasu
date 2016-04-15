@@ -31,6 +31,8 @@ class NekoContext
 	
 	/** Levels info */
 	public var levelsInfo:Dynamic;
+	
+	public var levelMax:Int = 1;
 
     public function new (mainPack :AssetPack, localePack :AssetPack, director :Director){
         this.pack = mainPack;
@@ -42,7 +44,15 @@ class NekoContext
         this.japanFont = new Font(pack, "fonts/japanFont");
 		
 		this.levelsInfo = Json.parse(pack.getFile("levels.json").toString());
+		setLevelMax();
     }
+	
+	private function setLevelMax() {
+		var i = 1;
+		
+		while (Reflect.hasField(levelsInfo, Std.string(i))) i++;
+		levelMax = i-1;
+	}
 
     public function enterHomeScene (animate :Bool = true)
     {

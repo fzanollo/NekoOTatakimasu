@@ -9,9 +9,9 @@ class KanaManager
 		
 	}
 	
-	public function setFirstXKanasToUse(syllabary:String, quantity:Int) {
+	public function setKanasToUse(syllabary:String, romanjis:Array<String>) {
 		this.syllabaryInUse = syllabary;
-		this.kanasInUse = getFirstNKeys((syllabaryInUse == HIRAGANA) ? hiraganaToRomanji : katakanaToRomanji, quantity);
+		loadKanasInUse((syllabaryInUse == HIRAGANA) ? romanjiToHiragana : romanjiToKatakana, romanjis);
 	}
 	
 	public function getRandomKana():String {
@@ -42,19 +42,10 @@ class KanaManager
 		}
 	}
 	
-	private function getFirstNKeys(completeMap:Map<String, String>, quantity:Int):Array<String> {
-		var result:Array<String> = new Array();
-		var iterator = completeMap.keys();
-		
-		for (i in 0...quantity) {
-			if (iterator.hasNext()) {
-				var key = iterator.next();
-				result.push(key);
-			} else {
-				break;
-			}
+	private function loadKanasInUse(completeMap:Map<String, String>, romanjis:Array<String>) {
+		for (romanji in romanjis) {
+			kanasInUse.push(completeMap.get(romanji));
 		}
-		return result;
 	}
 	
 	private function getRandomElement(map:Map<String, String>):String {

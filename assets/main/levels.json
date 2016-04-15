@@ -1,16 +1,18 @@
 {
     "1" : {
-        "rate" : 50,
-        "maxSpeed" : 8,
+        "minSpawnTime" : 3,
+        "maxSpawnTime" : 5,
         "minSpeed" : 4,
-        "points" : 100,
+        "maxSpeed" : 2,
+        "goal" : 100,
         "kanas" : ["A","E","I","O","U"]
     },
     "2" : {
-        "rate" : 45,
-        "maxSpeed" : 10,
-        "minSpeed" : 6,
-        "points" : 200,
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
         "kanas" : ["KA","KE","KI","KO","KU"]
     }
 }
