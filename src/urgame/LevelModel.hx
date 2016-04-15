@@ -99,6 +99,10 @@ class LevelModel extends Component
 		])));
 		
 		createInputTextAndManager(); //nombre de mierda, cambiar
+		
+		// shows info prompt
+		this.pause();
+		ctx.showPrompt(" texto informativo del nivel", []);
     }
 	
 	private function createInputTextAndManager() {
