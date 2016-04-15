@@ -100,10 +100,21 @@ class LevelModel extends Component
 		
 		createInputTextAndManager(); //nombre de mierda, cambiar
 		
-		// shows info prompt
-		this.pause();
-		ctx.showPrompt(" texto informativo del nivel", []);
     }
+	
+	override public function onStart() 
+	{
+		super.onStart();
+		
+		//shows info prompt
+		this.pause();
+		ctx.showPrompt(" texto informativo del nivel \n n° "+levelNumber, [
+				"Play", function () {
+                    // Unpause by unwinding to the original scene
+                    ctx.previousScene();
+					this.unpause();
+                }]);
+	}
 	
 	private function createInputTextAndManager() {
 		// add ui input text sprite
