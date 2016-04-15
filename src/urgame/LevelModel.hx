@@ -57,6 +57,7 @@ class LevelModel extends Component
 		
 		//init level specific stuff
 		this.levelNumber = levelNumber;
+		
 		nekoMinSpeed = levelNumber;
 		nekoMaxSpeed = levelNumber + 2;
 		nekoSpawnTime = levelNumber + (levelNumber * 30) / 100;

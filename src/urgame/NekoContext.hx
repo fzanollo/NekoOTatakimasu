@@ -6,6 +6,7 @@ import flambe.display.Font;
 import flambe.scene.Director;
 import flambe.scene.SlideTransition;
 import flambe.util.MessageBundle;
+import haxe.Json;
 
 /** Contains all the game state that needs to get passed around. */
 class NekoContext
@@ -27,6 +28,9 @@ class NekoContext
 	
 	/** Global configs. */
 	public var muted :Bool = false;
+	
+	/** Levels info */
+	public var levelsInfo:Dynamic;
 
     public function new (mainPack :AssetPack, localePack :AssetPack, director :Director){
         this.pack = mainPack;
@@ -36,6 +40,8 @@ class NekoContext
         this.lightFont = new Font(pack, "fonts/Light");
         this.darkFont = new Font(pack, "fonts/Dark");
         this.japanFont = new Font(pack, "fonts/japanFont");
+		
+		this.levelsInfo = Json.parse(pack.getFile("levels.json").toString());
     }
 
     public function enterHomeScene (animate :Bool = true)
