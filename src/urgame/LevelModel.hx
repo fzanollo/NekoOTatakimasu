@@ -47,7 +47,6 @@ class LevelModel extends Component
 	private var inputManager:InputManager;
 	
 	private var levelNumber:Int;
-	private var kanaManager:KanaManager = new KanaManager();
 	private var enterPressedSignalConnection:SignalConnection;
 	private var currentInputSignalConnection:SignalConnection;
 
@@ -69,7 +68,7 @@ class LevelModel extends Component
 		
 		goal = levelInfo.goal;
 		
-		kanaManager.setKanasToUse(KanaManager.HIRAGANA, levelInfo.kanas); //it's called kanas but it actually is romanji... change that (maybe)
+		ctx.kanaManager.setNewKanas(KanaManager.HIRAGANA, levelInfo.kanas);
 		//TODO every new lvl shows only new kana
 		
 		trace('level: $levelNumber, level info: $levelInfo');
@@ -204,7 +203,7 @@ class LevelModel extends Component
 	}
 	
 	private function nekoMaker() {
-		var nekoComponent = new NekoComponent(nekoMaxSpeed, kanaManager, ctx);
+		var nekoComponent = new NekoComponent(nekoMaxSpeed, ctx.kanaManager, ctx);
 		var neko = new Entity().add(nekoComponent);
 		
 		//add to objects array
