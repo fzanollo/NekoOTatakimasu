@@ -15,6 +15,7 @@ import flambe.util.SignalConnection;
 import flambe.util.Value;
 import urgame.neko.InputManager;
 import urgame.neko.KanaManager;
+import urgame.neko.LevelInfo;
 import urgame.neko.NekoComponent;
 import urgame.NekoContext;
 
@@ -26,12 +27,8 @@ class LevelModel extends Component
 	/** The current lives. */
 	public var lives (default, null) :Value<Int>;
 	
-	//level dificulty fields
-	public var nekoMinSpawnTime:Float = 4; //seconds
-	public var nekoMaxSpawnTime:Float = 4;
-	public var nekoMinSpeed:Int = 1; //per frame
-	public var nekoMaxSpeed:Int = 2;
-	public var goal:Int = 100;
+	//level info
+	public var levelInfo:LevelInfo;
 
 	//layers
 	private var worldLayer:Entity;
@@ -59,14 +56,8 @@ class LevelModel extends Component
 		this.levelNumber = levelNumber;
 		
 		//get level info
-		var levelInfo = Reflect.field(ctx.levelsInfo, Std.string(levelNumber));
-		
-		nekoMinSpeed = levelInfo.minSpeed;
-		nekoMaxSpeed = levelInfo.maxSpeed;
-		nekoMinSpawnTime = levelInfo.minSpawnTime;
-		nekoMaxSpawnTime = levelInfo.maxSpawnTime;
-		
-		goal = levelInfo.goal;
+		trace(Reflect.field(ctx.levelsInfo, Std.string(levelNumber)));
+		levelInfo = new LevelInfo(Reflect.field(ctx.levelsInfo, Std.string(levelNumber)));
 		
 		ctx.kanaManager.setNewKanas(KanaManager.HIRAGANA, levelInfo.kanas);
 		//TODO every new lvl shows only new kana
@@ -86,33 +77,28 @@ class LevelModel extends Component
         backgroundLayer.addChild(kanaLayer = new Entity());
         backgroundLayer.addChild(gameUILayer = new Entity());
 		
-		////show hiragana meaning at the beginning of level
-		//var levelScript = new Script();
-		
 		//spawn script
 		var spawnScript = new Script();
 		worldLayer.add(spawnScript);
 		spawnScript.run(new Repeat(new Sequence([
-			new Delay(nekoMinSpawnTime), //TODO cambiar la forma de spawnear para poder tener spawnTimes random
+			new Delay(Math.floor(Std.random(Math.floor(levelInfo.nekoMaxSpawnTime)))), //TODO cambiar la forma de spawnear para poder tener spawnTimes random
 			new CallFunction(nekoMaker)
 		])));
 		
 		createInputTextAndManager(); //nombre de mierda, cambiar
-		
     }
 	
-	override public function onStart() 
-	{
+	override public function onStart() {
 		super.onStart();
 		
 		//shows info prompt
 		this.pause();
-		ctx.showPrompt(" texto informativo del nivel \n n° "+levelNumber, [
-				"Play", function () {
-                    // Unpause by unwinding to the original scene
-                    ctx.previousScene();
-					this.unpause();
-                }]);
+		//ctx.showPrompt(" texto informativo del nivel \n n° "+levelNumber, [
+				//"Play", function () {
+                    //// Unpause by unwinding to the original scene
+                    //ctx.previousScene();
+					//this.unpause();
+                //}]);
 	}
 	
 	private function createInputTextAndManager() {
@@ -150,8 +136,8 @@ class LevelModel extends Component
 			var neko = nekoArray[i];
 			var nekoComponent = neko.get(NekoComponent);
 			
-			trace('COMPARING: ${nekoComponent.getRomaji()}  WITH:  $input');
-			if (nekoComponent.getRomaji() == input) { //si coincide
+			trace('COMPARING: ${ctx.kanaManager.getRomanji(nekoComponent.getKana())}  WITH:  $input');
+			if (ctx.kanaManager.getRomanji(nekoComponent.getKana()) == input) { //si coincide
 				nekoArray.splice(i, 1);
 				neko.dispose();
 				
@@ -203,7 +189,7 @@ class LevelModel extends Component
 	}
 	
 	private function nekoMaker() {
-		var nekoComponent = new NekoComponent(nekoMaxSpeed, ctx.kanaManager, ctx);
+		var nekoComponent = new NekoComponent(levelInfo.nekoMaxSpeed, ctx.kanaManager.getRandomNewKana(), ctx);
 		var neko = new Entity().add(nekoComponent);
 		
 		//add to objects array

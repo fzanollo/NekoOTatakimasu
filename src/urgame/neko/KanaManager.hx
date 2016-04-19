@@ -12,8 +12,8 @@ class KanaManager
 	}
 	
 	public function setNewKanas(syllabary:String, kanas:Array<String>) {
-		this.syllabaryInUse = syllabary;
-		if (newKana.length > 0) oldKana.concat(newKana); //the old 'newKana' is now old xD
+		this.syllabaryInUse = syllabary; //TODO cambiar de lugar
+		if (newKana.length > 0) oldKana.concat(newKana); //the old 'newKana' is now old xD //TODO cambiar esto (que pasa si se juega un lvl viejo)
 		newKana = kanas;
 	}
 	
