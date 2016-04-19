@@ -90,4 +90,9 @@ class NekoContext
     {
         director.pushScene(PromptScene.create(this, text, buttons));
     }
+	
+	public function previousScene ()
+	{
+		director.popScene();
+	}
 }
