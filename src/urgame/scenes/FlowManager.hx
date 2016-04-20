@@ -49,20 +49,36 @@ class FlowManager
 	private function getScene(sceneID:SceneID, args:Dynamic):Entity {
 		switch (sceneID) {
 			case Home:
-				if (homeScene == null) homeScene = new HomeScene(ctx);
-				return new Entity().add(homeScene);
+				if (homeScene == null) {
+					homeScene = new HomeScene(ctx);
+					return new Entity().add(homeScene);
+				} else {
+					return homeScene;
+				}
 				
 			case Credits:
-				if (creditsScene == null) creditsScene = new CreditsScene(ctx);
-				return new Entity().add(creditsScene);
+				if (creditsScene == null) {
+					creditsScene = new CreditsScene(ctx);
+					return new Entity().add(creditsScene);
+				} else {
+					return creditsScene;
+				}
 				
 			case LevelSelection:
-				if (levelSelectionScene == null) levelSelectionScene = new LevelSelectionScene(ctx);
-				return new Entity().add(levelSelectionScene);
+				if (levelSelectionScene == null) {
+					levelSelectionScene = new LevelSelectionScene(ctx);
+					return new Entity().add(levelSelectionScene);
+				} else {
+					return levelSelectionScene;
+				}
 				
 			case Options:
-				if (optionsScene == null) optionsScene = new OptionsScene(ctx);
-				return new Entity().add(optionsScene);
+				if (optionsScene == null) {
+					optionsScene = new OptionsScene(ctx);
+					return new Entity().add(optionsScene);
+				} else {
+					return optionsScene;
+				}
 				
 			case Playing:
 				playingScene = new PlayingScene(ctx, args.levelNumber); //siempre es un scene nuevo, args debe contener levelNumber
@@ -70,7 +86,6 @@ class FlowManager
 				
 			default:
 				trace('ERROR @FLOWMANAGER id $sceneID doesn\'t have any scene asigned');
-				return null;
 		}
 	}
 }
