@@ -1,0 +1,18 @@
+{
+    "1" : {
+        "minSpawnTime" : 3,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 2,
+        "goal" : 100,
+        "kanas" : ["あ","い","う","え","お"]
+    },
+    "2" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["か","き","く","け","こ"]
+    }
+}

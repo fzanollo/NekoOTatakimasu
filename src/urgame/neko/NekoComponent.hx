@@ -12,7 +12,7 @@ class NekoComponent extends Component
 	public var hit = false;
 	
 	private var moving:Bool = false;
-	private var romaji:String;
+	private var kana:String;
 	private var maxY:Int;
 	
 	private var entity:Entity;
@@ -21,7 +21,7 @@ class NekoComponent extends Component
 	
 	private var ctx :NekoContext;
 	
-	public function new(maxSpeed:Int, kanaManager:KanaManager, ctx :NekoContext) {
+	public function new(maxSpeed:Int, kana:String, ctx :NekoContext) {
 		this.ctx = ctx;
 		entity = new Entity();
 		
@@ -31,9 +31,9 @@ class NekoComponent extends Component
 		imageSprite.setScale(0.6).setXY(System.stage.width, Std.random(maxY));
 		
 		//text random kana
-		textSprite = new TextSprite(ctx.japanFont, kanaManager.getRandomKana());
+		this.kana = kana;
+		textSprite = new TextSprite(ctx.japanFont, kana);
 		textSprite.centerAnchor().setXY(imageSprite.getNaturalWidth() / 2, imageSprite.getNaturalHeight() / 2);
-		romaji = kanaManager.getRomanji(textSprite.text);
 		
 		speed = Std.random(maxSpeed) + 1;
 	}
@@ -41,9 +41,7 @@ class NekoComponent extends Component
 	public function move() { moving = true; }
 	public function stop() { moving = false; }
 	
-	public function getRomaji():String {
-		return romaji;
-	}
+	public function getKana():String { return kana; };
 	
 	override public function onAdded() {
 		super.onAdded();

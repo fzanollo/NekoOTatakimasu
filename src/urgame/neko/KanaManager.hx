@@ -3,19 +3,51 @@ package urgame.neko;
 class KanaManager
 {
 	private var syllabaryInUse:String = HIRAGANA;
-	private var kanasInUse:Array<String> = new Array();
+	
+	private var newKana:Array<String> = new Array(); //kanas of the current level
+	private var oldKana:Array<String> = new Array(); //kanas of the already passed levels
 	
 	public function new() {
 		
 	}
 	
-	public function setFirstXKanasToUse(syllabary:String, quantity:Int) {
-		this.syllabaryInUse = syllabary;
-		this.kanasInUse = getFirstNKeys((syllabaryInUse == HIRAGANA) ? hiraganaToRomanji : katakanaToRomanji, quantity);
+	public function setSyllabary(syllabary:String) {
+		this.syllabaryInUse = syllabary;		
 	}
 	
-	public function getRandomKana():String {
-		return kanasInUse[Std.random(kanasInUse.length)];
+	public function getSyllabary():String {
+		return syllabaryInUse;
+	}
+	
+	public function setNewKanas(kanas:Array<String>) {
+		if (kanas != null) {
+			setOldKana(kanas[0], (syllabaryInUse==HIRAGANA ? hiraganaToRomanji : katakanaToRomanji));
+			newKana = kanas;			
+		} else {
+			trace('ERROR @KANAMANAGER - SET NEW KANAS : expecting kanas to use as new');
+		}
+	}
+	
+	private function setOldKana(firstNewKana:String, completeMap:Map<String, String>) {
+		oldKana = new Array();
+		var iterator = completeMap.keys();
+		
+		while (iterator.hasNext()) {
+			var item = iterator.next();
+			if (item != firstNewKana) {
+				oldKana.push(item);
+			} else {
+				break; //leave the while loop
+			}
+		}
+	}
+	
+	public function getRandomNewKana():String {
+		return newKana[Std.random(newKana.length)];
+	}
+	
+	public function getRandomOldKana():String {
+		return oldKana[Std.random(oldKana.length)];
 	}
 	
 	public function getRandomKanaFromAll():String {
@@ -40,21 +72,6 @@ class KanaManager
 		} else {
 			return romaji;
 		}
-	}
-	
-	private function getFirstNKeys(completeMap:Map<String, String>, quantity:Int):Array<String> {
-		var result:Array<String> = new Array();
-		var iterator = completeMap.keys();
-		
-		for (i in 0...quantity) {
-			if (iterator.hasNext()) {
-				var key = iterator.next();
-				result.push(key);
-			} else {
-				break;
-			}
-		}
-		return result;
 	}
 	
 	private function getRandomElement(map:Map<String, String>):String {

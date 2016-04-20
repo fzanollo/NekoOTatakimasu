@@ -1,31 +1,25 @@
-//
-// Flambe - Rapid game development
-// https://github.com/aduros/flambe/blob/master/LICENSE.txt
+package urgame.scenes;
 
-package urgame;
-
-import flambe.Entity;
-import flambe.swf.Library;
-import flambe.swf.MoviePlayer;
-import flambe.System;
-import flambe.animation.Ease;
-import flambe.display.FillSprite;
 import flambe.display.ImageSprite;
-import flambe.display.Sprite;
-import flambe.util.Promise;
-import urgame.NekoContext;
+import flambe.Entity;
+import flambe.System;
 import ui.ButtonBehaviour;
+import urgame.scenes.FlowManager.SceneID;
 
-class HomeScene
+class HomeScene extends FlowScene
 {
-    /** Creates the main menu scene. */
-    public static function create (ctx :NekoContext) :Entity
-    {
-        var scene = new Entity();
+
+	public function new(ctx:NekoContext, opaque:Bool=true) {
+		super(ctx, opaque);
+		
+	}
+	
+	override public function onAdded() {
+		super.onAdded();
 		
 		//Background
         var background = new ImageSprite(ctx.pack.getTexture("menu_background"));
-        scene.addChild(new Entity().add(background));
+        baseEntity.addChild(new Entity().add(background));
 		
 		//Play button
 		var play = new Entity();
@@ -33,10 +27,10 @@ class HomeScene
 		playSprite.centerAnchor().setXY(System.stage.width * 1 / 2, System.stage.height * 1 / 2);
 		var playBehaviour = new ButtonBehaviour();
 		playBehaviour.setHandler(function(pointerEvent) {
-			ctx.enterLevelSelectionScene();
+			ctx.flowManager.enterScene(SceneID.LevelSelection);
 		});
 		play.add(playSprite).add(playBehaviour);
-		scene.addChild(play);
+		baseEntity.addChild(play);
 		
 		//Credits button
 		var credits = new Entity();
@@ -46,10 +40,10 @@ class HomeScene
 		var creditsBehaviour = new ButtonBehaviour();
 		creditsBehaviour.setHandler(function(pointerEvent){
             //ctx.pack.getSound("sounds/Coin").play();
-            ctx.enterCreditsScene();
+            ctx.flowManager.enterScene(SceneID.Credits);
         });
 		credits.add(creditsSprite).add(creditsBehaviour);
-        scene.addChild(credits);
+        baseEntity.addChild(credits);
 		
 		//Options button
 		var options = new Entity();
@@ -59,11 +53,9 @@ class HomeScene
 		var optionsBehaviour = new ButtonBehaviour(); 
 		optionsBehaviour.setHandler(function (pointerEvent) {
             //ctx.pack.getSound("sounds/Coin").play();
-            ctx.enterOptionsScene();
+            ctx.flowManager.enterScene(SceneID.Options);
         });
 		options.add(optionsSprite).add(optionsBehaviour);
-        scene.addChild(options);
-		
-        return scene;
-    }
+        baseEntity.addChild(options);
+	}
 }

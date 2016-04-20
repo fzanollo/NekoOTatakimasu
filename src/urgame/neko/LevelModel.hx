@@ -1,4 +1,4 @@
-package urgame;
+package urgame.neko;
 
 import flambe.Component;
 import flambe.display.ImageSprite;
@@ -11,9 +11,11 @@ import flambe.script.Repeat;
 import flambe.script.Script;
 import flambe.script.Sequence;
 import flambe.System;
+import flambe.util.SignalConnection;
 import flambe.util.Value;
 import urgame.neko.InputManager;
 import urgame.neko.KanaManager;
+import urgame.neko.LevelInfo;
 import urgame.neko.NekoComponent;
 import urgame.NekoContext;
 
@@ -25,10 +27,8 @@ class LevelModel extends Component
 	/** The current lives. */
 	public var lives (default, null) :Value<Int>;
 	
-	//level dificulty fields
-	public var nekoSpawnTime:Float = 4; //seconds
-	public var nekoMaxSpeed:Int = 2; 
-	public var nekoMinSpeed:Int = 1; 
+	//level info
+	public var levelInfo:LevelInfo;
 
 	//layers
 	private var worldLayer:Entity;
@@ -44,7 +44,8 @@ class LevelModel extends Component
 	private var inputManager:InputManager;
 	
 	private var levelNumber:Int;
-	private var kanaManager:KanaManager = new KanaManager();
+	private var enterPressedSignalConnection:SignalConnection;
+	private var currentInputSignalConnection:SignalConnection;
 
     public function new (ctx :NekoContext, levelNumber:Int){
         this.ctx = ctx;
@@ -52,14 +53,16 @@ class LevelModel extends Component
         score = new Value<Int>(0);
 		lives = new Value<Int>(3);
 		
-		//init level specific stuff
 		this.levelNumber = levelNumber;
-		nekoMinSpeed = levelNumber;
-		nekoMaxSpeed = levelNumber + 2;
-		nekoSpawnTime = levelNumber + (levelNumber * 30) / 100;
-		kanaManager.setFirstXKanasToUse(KanaManager.HIRAGANA, levelNumber * 5);
 		
-		trace('level info: level: $levelNumber, nekoMinSpeed $nekoMinSpeed, nekoMaxSpeed $nekoMaxSpeed, nekoSpawnTime $nekoSpawnTime');
+		/* get Level info */
+		levelInfo = new LevelInfo(Reflect.field((ctx.kanaManager.getSyllabary() == KanaManager.HIRAGANA) ? ctx.hiraganaLevelsInfo : ctx.katakanaLevelsInfo, Std.string(levelNumber)));
+		
+		ctx.kanaManager.setSyllabary(KanaManager.HIRAGANA);
+		ctx.kanaManager.setNewKanas(levelInfo.kanas);
+		//TODO every new lvl shows only new kana
+		
+		trace('level: $levelNumber, level info: $levelInfo');
     }
 
     override public function onAdded () {
@@ -74,20 +77,29 @@ class LevelModel extends Component
         backgroundLayer.addChild(kanaLayer = new Entity());
         backgroundLayer.addChild(gameUILayer = new Entity());
 		
-		////show hiragana meaning at the beginning of level
-		//var levelScript = new Script();
-		
-		
 		//spawn script
 		var spawnScript = new Script();
 		worldLayer.add(spawnScript);
 		spawnScript.run(new Repeat(new Sequence([
-			new Delay(nekoSpawnTime),
+			new Delay(levelInfo.nekoMinSpawnTime), //TODO cambiar la forma de spawnear para poder tener spawnTimes random
 			new CallFunction(nekoMaker)
 		])));
 		
 		createInputTextAndManager(); //nombre de mierda, cambiar
     }
+	
+	override public function onStart() {
+		super.onStart();
+		
+		//shows info prompt
+		this.pause();
+		//ctx.showPrompt(" texto informativo del nivel \n n° "+levelNumber, [
+				//"Play", function () {
+                    //// Unpause by unwinding to the original scene
+                    //ctx.previousScene();
+					//this.unpause();
+                //}]);
+	}
 	
 	private function createInputTextAndManager() {
 		// add ui input text sprite
@@ -97,8 +109,8 @@ class LevelModel extends Component
 		
 		//input management
 		inputManager = new InputManager();
-		inputManager.enterPressed.connect(checkForCoincidence);
-		inputManager.currentInput.changed.connect(function(currentInput, _) {
+		enterPressedSignalConnection = inputManager.enterPressed.connect(checkForCoincidence);
+		currentInputSignalConnection = inputManager.currentInput.changed.connect(function(currentInput, _) {
 			//update UI input text sprite
 			inputUITextSprite.text = currentInput; 
 		});
@@ -124,8 +136,8 @@ class LevelModel extends Component
 			var neko = nekoArray[i];
 			var nekoComponent = neko.get(NekoComponent);
 			
-			trace('COMPARING: ${nekoComponent.getRomaji()}  WITH:  $input');
-			if (nekoComponent.getRomaji() == input) { //si coincide
+			trace('COMPARING: ${ctx.kanaManager.getRomanji(nekoComponent.getKana())}  WITH:  $input');
+			if (ctx.kanaManager.getRomanji(nekoComponent.getKana()) == input) { //si coincide
 				nekoArray.splice(i, 1);
 				neko.dispose();
 				
@@ -177,7 +189,7 @@ class LevelModel extends Component
 	}
 	
 	private function nekoMaker() {
-		var nekoComponent = new NekoComponent(nekoMaxSpeed, kanaManager, ctx);
+		var nekoComponent = new NekoComponent(levelInfo.nekoMaxSpeed, ctx.kanaManager.getRandomNewKana(), ctx);
 		var neko = new Entity().add(nekoComponent);
 		
 		//add to objects array
@@ -188,5 +200,14 @@ class LevelModel extends Component
 		
 		//move
 		nekoComponent.move();
+	}
+	
+	override public function dispose() {
+		super.dispose();
+		
+		//disconnect signals
+		enterPressedSignalConnection.dispose();
+		currentInputSignalConnection.dispose();
+		inputManager.dispose();
 	}
 }
