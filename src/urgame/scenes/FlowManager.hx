@@ -25,12 +25,6 @@ class FlowManager
 		this.director = director;
 		this.ctx = ctx;
 	}
-
-    //public function enterPlayingScene (animate :Bool = true, levelNumber:Int)
-    //{
-        //director.unwindToScene(PlayingScene.create(this, levelNumber),
-            //animate ? new SlideTransition(0.5, Ease.quadOut) : null);
-    //}
 	
 	public function enterScene(sceneID:SceneID, animate:Bool = true, args:Dynamic = null) {
 		trace('llega a enterScene con id $sceneID, animate $animate, args $args');
@@ -48,27 +42,43 @@ class FlowManager
 		director.popScene();
 	}
 	
-	public function unwindToScene(scene:Entity) {
-		director.unwindToScene(scene);
-	}
+	//public function unwindToScene(scene:Entity) {
+		//director.unwindToScene(scene);
+	//}
 	
 	private function getScene(sceneID:SceneID, args:Dynamic):Entity {
 		switch (sceneID) {
 			case Home:
-				if (homeScene == null) homeScene = new HomeScene(ctx);
-				return new Entity().add(homeScene);
+				//if (homeScene == null) {
+					homeScene = new HomeScene(ctx);
+					return new Entity().add(homeScene);
+				//} else {
+					//return homeScene.owner;
+				//}
 				
 			case Credits:
-				if (creditsScene == null) creditsScene = new CreditsScene(ctx);
-				return new Entity().add(creditsScene);
+				//if (creditsScene == null) {
+					creditsScene = new CreditsScene(ctx);
+					return new Entity().add(creditsScene);
+				//} else {
+					//return creditsScene.owner;
+				//}
 				
 			case LevelSelection:
-				if (levelSelectionScene == null) levelSelectionScene = new LevelSelectionScene(ctx);
-				return new Entity().add(levelSelectionScene);
+				//if (levelSelectionScene == null) {
+					levelSelectionScene = new LevelSelectionScene(ctx);
+					return new Entity().add(levelSelectionScene);
+				//} else {
+					//return levelSelectionScene.owner;
+				//}
 				
 			case Options:
-				if (optionsScene == null) optionsScene = new OptionsScene(ctx);
-				return new Entity().add(optionsScene);
+				//if (optionsScene == null) {
+					optionsScene = new OptionsScene(ctx);
+					return new Entity().add(optionsScene);
+				//} else {
+					//return optionsScene.owner;
+				//}
 				
 			case Playing:
 				playingScene = new PlayingScene(ctx, args.levelNumber); //siempre es un scene nuevo, args debe contener levelNumber

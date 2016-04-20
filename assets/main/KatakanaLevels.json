@@ -5,7 +5,7 @@
         "minSpeed" : 4,
         "maxSpeed" : 2,
         "goal" : 100,
-        "kanas" : ["あ","い","う","え","お"]
+        "kanas" : ["ア","イ","ウ","エ","オ"]
     },
     "2" : {
         "minSpawnTime" : 2,
@@ -13,6 +13,70 @@
         "minSpeed" : 4,
         "maxSpeed" : 6,
         "goal" : 200,
-        "kanas" : ["か","き","く","け","こ"]
+        "kanas" : ["カ","キ","ク","ケ","コ"]
+    },
+    "3" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["サ","シ","ス","セ","ソ"]
+    },
+    "4" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["タ","チ","ツ","テ","ト"]
+    },
+    "5" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ナ","ニ","ヌ","ネ","ノ"]
+    },
+    "6" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ハ","ヒ","フ","ヘ","ホ"]
+    },
+    "7" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["マ","ミ","ム","メ","モ"]
+    },
+    "8" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ヤ","ユ","ヨ"]
+    },
+    "9" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ラ","リ","ル","レ","ロ"]
+    },
+    "10" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ワ","ヲ","ン"]
     }
 }

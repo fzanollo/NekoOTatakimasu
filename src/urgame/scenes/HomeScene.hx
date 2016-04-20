@@ -11,7 +11,6 @@ class HomeScene extends FlowScene
 
 	public function new(ctx:NekoContext, opaque:Bool=true) {
 		super(ctx, opaque);
-		
 	}
 	
 	override public function onAdded() {

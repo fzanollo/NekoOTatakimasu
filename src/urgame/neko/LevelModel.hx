@@ -93,12 +93,12 @@ class LevelModel extends Component
 		
 		//shows info prompt
 		this.pause();
-		//ctx.showPrompt(" texto informativo del nivel \n n° "+levelNumber, [
-				//"Play", function () {
-                    //// Unpause by unwinding to the original scene
-                    //ctx.previousScene();
-					//this.unpause();
-                //}]);
+		ctx.flowManager.showPrompt(" texto informativo del nivel \n n° "+levelNumber, [
+				"Play", function () {
+                    // Unpause by unwinding to the original scene
+                    ctx.flowManager.backToPreviousScene();
+					this.unpause();
+                }]);
 	}
 	
 	private function createInputTextAndManager() {

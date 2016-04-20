@@ -14,5 +14,69 @@
         "maxSpeed" : 6,
         "goal" : 200,
         "kanas" : ["か","き","く","け","こ"]
+    },
+    "3" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["さ","し","す","せ","そ"]
+    },
+    "4" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["た","ち","つ","て","と"]
+    },
+    "5" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["な","に","ぬ","ね","の"]
+    },
+    "6" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["は","ひ","ふ","へ","ほ"]
+    },
+    "7" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ま","み","む","め","も"]
+    },
+    "8" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["や","ゆ","よ"]
+    },
+    "9" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ら","り","る","れ","ろ"]
+    },
+    "10" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["わ","を","ん"]
     }
 }
