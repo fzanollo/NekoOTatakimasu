@@ -53,7 +53,7 @@ class FlowManager
 					homeScene = new HomeScene(ctx);
 					return new Entity().add(homeScene);
 				} else {
-					return homeScene;
+					return homeScene.owner;
 				}
 				
 			case Credits:
@@ -61,7 +61,7 @@ class FlowManager
 					creditsScene = new CreditsScene(ctx);
 					return new Entity().add(creditsScene);
 				} else {
-					return creditsScene;
+					return creditsScene.owner;
 				}
 				
 			case LevelSelection:
@@ -69,7 +69,7 @@ class FlowManager
 					levelSelectionScene = new LevelSelectionScene(ctx);
 					return new Entity().add(levelSelectionScene);
 				} else {
-					return levelSelectionScene;
+					return levelSelectionScene.owner;
 				}
 				
 			case Options:
@@ -77,7 +77,7 @@ class FlowManager
 					optionsScene = new OptionsScene(ctx);
 					return new Entity().add(optionsScene);
 				} else {
-					return optionsScene;
+					return optionsScene.owner;
 				}
 				
 			case Playing:
@@ -86,6 +86,7 @@ class FlowManager
 				
 			default:
 				trace('ERROR @FLOWMANAGER id $sceneID doesn\'t have any scene asigned');
+				return null;
 		}
 	}
 }
