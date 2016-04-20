@@ -8,6 +8,8 @@ import flambe.display.FillSprite;
 import flambe.display.ImageSprite;
 import flambe.scene.Director;
 import urgame.NekoContext;
+import urgame.scenes.FlowManager;
+import urgame.scenes.PreloaderScene;
 
 class Main
 {
@@ -31,7 +33,7 @@ class Main
                 var promise = System.loadAssetPack(Manifest.fromAssets("main"));
                 promise.get(function (mainPack) {
                     var ctx = new NekoContext(mainPack, localePack, director);
-                    ctx.enterHomeScene(false);
+                    ctx.flowManager.enterScene(SceneID.Home, false);
 					
                     // Free up the preloader assets to save memory
                     bootstrapPack.dispose();

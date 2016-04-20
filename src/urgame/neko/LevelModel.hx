@@ -1,4 +1,4 @@
-package urgame;
+package urgame.neko;
 
 import flambe.Component;
 import flambe.display.ImageSprite;
@@ -55,9 +55,8 @@ class LevelModel extends Component
 		
 		this.levelNumber = levelNumber;
 		
-		//get level info
-		trace(Reflect.field(ctx.levelsInfo, Std.string(levelNumber)));
-		levelInfo = new LevelInfo(Reflect.field(ctx.levelsInfo, Std.string(levelNumber)));
+		/* get Level info */
+		levelInfo = new LevelInfo(Reflect.field((ctx.kanaManager.getSyllabary() == KanaManager.HIRAGANA) ? ctx.hiraganaLevelsInfo : ctx.katakanaLevelsInfo, Std.string(levelNumber)));
 		
 		ctx.kanaManager.setSyllabary(KanaManager.HIRAGANA);
 		ctx.kanaManager.setNewKanas(levelInfo.kanas);

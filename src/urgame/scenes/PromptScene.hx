@@ -1,8 +1,4 @@
-//
-// Flambe - Rapid game development
-// https://github.com/aduros/flambe/blob/master/LICENSE.txt
-
-package urgame;
+package urgame.scenes;
 
 import flambe.Entity;
 import flambe.System;

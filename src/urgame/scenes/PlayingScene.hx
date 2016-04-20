@@ -1,27 +1,29 @@
-//
-// Flambe - Rapid game development
-// https://github.com/aduros/flambe/blob/master/LICENSE.txt
+package urgame.scenes;
 
-package urgame;
-
-import flambe.Entity;
-import flambe.System;
 import flambe.display.ImageSprite;
 import flambe.display.TextSprite;
+import flambe.Entity;
+import flambe.System;
 import ui.ButtonBehaviour;
-import urgame.LevelModel;
+import urgame.neko.LevelModel;
 import urgame.NekoContext;
+import urgame.scenes.FlowManager.SceneID;
 
-class PlayingScene
+class PlayingScene extends FlowScene
 {
-    /** Creates the scene where the gameplay happens. */
-    public static function create (ctx :NekoContext, levelNumber:Int)
-    {
-        var scene = new Entity();
+	private var levelNumber:Int;
+	
+	public function new(ctx:NekoContext, levelNumber:Int, opaque:Bool=true) {
+		super(ctx, opaque);
+		this.levelNumber = levelNumber;
+	}
+	
+	override public function onAdded() {
+		super.onAdded();
 		
-        var level = new LevelModel(ctx, levelNumber);
+		var level = new LevelModel(ctx, levelNumber); 
         ctx.level = level;
-        scene.add(level);
+        baseEntity.add(level);
 		
         // Show a score label on the top left
         var scoreLabel = new TextSprite(ctx.lightFont);
@@ -29,7 +31,7 @@ class PlayingScene
         level.score.watch(function (score,_) {
             scoreLabel.text = score + ' of ${level.levelInfo.goal}';
         });
-        scene.addChild(new Entity().add(scoreLabel));
+        baseEntity.addChild(new Entity().add(scoreLabel));
 		
 		// Show a lives label on the top right
         var livesLabel = new TextSprite(ctx.lightFont);
@@ -37,7 +39,7 @@ class PlayingScene
             livesLabel.text = "lives: "+lives;
         });
         livesLabel.setXY(System.stage.width - livesLabel.getNaturalWidth() - 60, 5);
-        scene.addChild(new Entity().add(livesLabel));
+        baseEntity.addChild(new Entity().add(livesLabel));
 		
         // Show a pause button
 		var pause = new Entity();
@@ -46,35 +48,36 @@ class PlayingScene
         var pauseBehaviour = new ButtonBehaviour();
 		pauseBehaviour.setHandler(function (pointerEvent) {
 			level.pause();
-            ctx.showPrompt(ctx.messages.get("paused"), [
+            ctx.flowManager.showPrompt(ctx.messages.get("paused"), [
                 "Play", function () {
                     // Unpause by unwinding to the original scene
-                    ctx.director.unwindToScene(scene);
+                    ctx.flowManager.unwindToScene(baseEntity);
 					level.unpause();
                 },
                 "Home", function () {
                     // Go back to the main menu, unwinding first so the transition looks right
-                    ctx.director.unwindToScene(scene);
-                    ctx.enterHomeScene();
+                    ctx.flowManager.unwindToScene(baseEntity);
+                    ctx.flowManager.enterScene(SceneID.Home);
                 },
             ]);
         });
 		pause.add(pauseSprite).add(pauseBehaviour);
-        scene.addChild(pause);
+        baseEntity.addChild(pause);
 		
 		// Show the "You lose" prompt
 		level.lives.watch(function (lives, _) {
 			if (lives == 0) {
-				ctx.showPrompt(ctx.messages.get("you lose! and scored: "+level.score._), [
+				ctx.flowManager.showPrompt(ctx.messages.get("you lose! and scored: "+level.score._), [
 					
 					"Replay", function () {
-						ctx.director.unwindToScene(scene);
-						ctx.enterPlayingScene(levelNumber);
+						ctx.flowManager.unwindToScene(baseEntity);
+						//ctx.enterPlayingScene(levelNumber);
+						ctx.flowManager.enterScene(SceneID.Playing);
 					},
 					"Home", function () {
 						// Go back to the main menu, unwinding first so the transition looks right
-						ctx.director.unwindToScene(scene);
-						ctx.enterHomeScene();
+						ctx.flowManager.unwindToScene(baseEntity);
+						ctx.flowManager.enterScene(SceneID.Home);
 					},
             ]);
 			}
@@ -83,21 +86,20 @@ class PlayingScene
 		// Show the "you win" prompt
 		level.score.watch(function (score, _) {
 			if (score == level.levelInfo.goal) {
-				ctx.showPrompt(ctx.messages.get("you win!"), [
+				ctx.flowManager.showPrompt(ctx.messages.get("you win!"), [
 					
 					"Play", function () {
-						ctx.director.unwindToScene(scene);
-						ctx.enterPlayingScene(levelNumber + 1); //TODO esto es por ahora, de hecho puede generar problemas (no se sabe el lvl max)
+						ctx.flowManager.unwindToScene(baseEntity);
+						//ctx.enterPlayingScene(levelNumber + 1); //TODO esto es por ahora, de hecho puede generar problemas (no se sabe el lvl max)
+						ctx.flowManager.enterScene(SceneID.Playing);
 					},
 					"Home", function () {
 						// Go back to the main menu, unwinding first so the transition looks right
-						ctx.director.unwindToScene(scene);
-						ctx.enterHomeScene();
+						ctx.flowManager.unwindToScene(baseEntity);
+						ctx.flowManager.enterScene(SceneID.Home);
 					},
 				]);
 			}
 		});
-		
-        return scene;
-    }
+	}
 }

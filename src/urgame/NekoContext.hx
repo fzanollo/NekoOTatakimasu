@@ -1,13 +1,13 @@
 package urgame;
 
-import flambe.animation.Ease;
 import flambe.asset.AssetPack;
 import flambe.display.Font;
 import flambe.scene.Director;
-import flambe.scene.SlideTransition;
 import flambe.util.MessageBundle;
 import haxe.Json;
 import urgame.neko.KanaManager;
+import urgame.neko.LevelModel;
+import urgame.scenes.FlowManager;
 
 /** Contains all the game state that needs to get passed around. */
 class NekoContext
@@ -15,7 +15,8 @@ class NekoContext
     /** The main asset pack. */
     public var pack (default, null) :AssetPack;
 
-    public var director (default, null) :Director;
+	/** FlowManager */
+    public var flowManager:FlowManager;
 
     // Some constructed assets
     public var messages (default, null) :MessageBundle;
@@ -31,69 +32,35 @@ class NekoContext
 	public var muted :Bool = false;
 	
 	/** Levels info */
-	public var levelsInfo:Dynamic;
-	public var levelMax:Int = 1;
+	public var hiraganaLevelsInfo:Dynamic;
+	public var hiraganaLevelMax:Int = 1;
+	
+	public var katakanaLevelsInfo:Dynamic;
+	public var katakanaLevelMax:Int = 1;
 	
 	/** KanaManager */
 	public var kanaManager:KanaManager = new KanaManager();
 
     public function new (mainPack :AssetPack, localePack :AssetPack, director :Director){
         this.pack = mainPack;
-        this.director = director;
+        this.flowManager = new FlowManager(director, this);
 		
         this.messages = MessageBundle.parse(localePack.getFile("messages.ini").toString());
         this.lightFont = new Font(pack, "fonts/Light");
         this.darkFont = new Font(pack, "fonts/Dark");
         this.japanFont = new Font(pack, "fonts/japanFont");
 		
-		this.levelsInfo = Json.parse(pack.getFile("levels.json").toString());
-		setLevelMax();
+		this.hiraganaLevelsInfo = Json.parse(pack.getFile("HiraganaLevels.json").toString());
+		this.hiraganaLevelMax = getLevelMax(hiraganaLevelsInfo);
+		
+		this.katakanaLevelsInfo = Json.parse(pack.getFile("KatakanaLevels.json").toString());
+		this.katakanaLevelMax = getLevelMax(katakanaLevelsInfo);
     }
 	
-	private function setLevelMax() {
+	private function getLevelMax(levelsInfo:Dynamic):Int {
 		var i = 1;
 		
 		while (Reflect.hasField(levelsInfo, Std.string(i))) i++;
-		levelMax = i-1;
-	}
-
-    public function enterHomeScene (animate :Bool = true)
-    {
-        director.unwindToScene(HomeScene.create(this),
-            animate ? new SlideTransition(0.5, Ease.quadOut) : null);
-    }
-
-    public function enterPlayingScene (animate :Bool = true, levelNumber:Int)
-    {
-        director.unwindToScene(PlayingScene.create(this, levelNumber),
-            animate ? new SlideTransition(0.5, Ease.quadOut) : null);
-    }
-
-	public function enterOptionsScene (animate :Bool = true)
-    {
-        director.unwindToScene(OptionsScene.create(this),
-            animate ? new SlideTransition(0.5, Ease.quadOut) : null);
-    }
-	
-	public function enterCreditsScene (animate :Bool = true)
-    {
-        director.unwindToScene(CreditsScene.create(this),
-            animate ? new SlideTransition(0.5, Ease.quadOut) : null);
-    }
-
-    public function enterLevelSelectionScene (animate :Bool = true)
-    {
-        director.unwindToScene(LevelSelectionScene.create(this),
-            animate ? new SlideTransition(0.5, Ease.quadOut) : null);
-    }
-
-    public function showPrompt (text :String, buttons :Array<Dynamic>)
-    {
-        director.pushScene(PromptScene.create(this, text, buttons));
-    }
-	
-	public function previousScene ()
-	{
-		director.popScene();
+		return i-1;
 	}
 }

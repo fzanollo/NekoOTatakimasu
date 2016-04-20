@@ -15,6 +15,10 @@ class KanaManager
 		this.syllabaryInUse = syllabary;		
 	}
 	
+	public function getSyllabary():String {
+		return syllabaryInUse;
+	}
+	
 	public function setNewKanas(kanas:Array<String>) {
 		if (kanas != null) {
 			setOldKana(kanas[0], (syllabaryInUse==HIRAGANA ? hiraganaToRomanji : katakanaToRomanji));
