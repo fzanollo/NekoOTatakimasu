@@ -11,10 +11,31 @@ class KanaManager
 		
 	}
 	
-	public function setNewKanas(syllabary:String, kanas:Array<String>) {
-		this.syllabaryInUse = syllabary; //TODO cambiar de lugar
-		if (newKana.length > 0) oldKana.concat(newKana); //the old 'newKana' is now old xD //TODO cambiar esto (que pasa si se juega un lvl viejo)
-		newKana = kanas;
+	public function setSyllabary(syllabary:String) {
+		this.syllabaryInUse = syllabary;		
+	}
+	
+	public function setNewKanas(kanas:Array<String>) {
+		if (kanas != null) {
+			setOldKana(kanas[0], (syllabaryInUse==HIRAGANA ? hiraganaToRomanji : katakanaToRomanji));
+			newKana = kanas;			
+		} else {
+			trace('ERROR @KANAMANAGER - SET NEW KANAS : expecting kanas to use as new');
+		}
+	}
+	
+	private function setOldKana(firstNewKana:String, completeMap:Map<String, String>) {
+		oldKana = new Array();
+		var iterator = completeMap.keys();
+		
+		while (iterator.hasNext()) {
+			var item = iterator.next();
+			if (item != firstNewKana) {
+				oldKana.push(item);
+			} else {
+				break; //leave the while loop
+			}
+		}
 	}
 	
 	public function getRandomNewKana():String {

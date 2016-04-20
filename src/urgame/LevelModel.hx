@@ -59,7 +59,8 @@ class LevelModel extends Component
 		trace(Reflect.field(ctx.levelsInfo, Std.string(levelNumber)));
 		levelInfo = new LevelInfo(Reflect.field(ctx.levelsInfo, Std.string(levelNumber)));
 		
-		ctx.kanaManager.setNewKanas(KanaManager.HIRAGANA, levelInfo.kanas);
+		ctx.kanaManager.setSyllabary(KanaManager.HIRAGANA);
+		ctx.kanaManager.setNewKanas(levelInfo.kanas);
 		//TODO every new lvl shows only new kana
 		
 		trace('level: $levelNumber, level info: $levelInfo');
@@ -81,7 +82,7 @@ class LevelModel extends Component
 		var spawnScript = new Script();
 		worldLayer.add(spawnScript);
 		spawnScript.run(new Repeat(new Sequence([
-			new Delay(Math.floor(Std.random(Math.floor(levelInfo.nekoMaxSpawnTime)))), //TODO cambiar la forma de spawnear para poder tener spawnTimes random
+			new Delay(levelInfo.nekoMinSpawnTime), //TODO cambiar la forma de spawnear para poder tener spawnTimes random
 			new CallFunction(nekoMaker)
 		])));
 		
