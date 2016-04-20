@@ -25,12 +25,6 @@ class FlowManager
 		this.director = director;
 		this.ctx = ctx;
 	}
-
-    //public function enterPlayingScene (animate :Bool = true, levelNumber:Int)
-    //{
-        //director.unwindToScene(PlayingScene.create(this, levelNumber),
-            //animate ? new SlideTransition(0.5, Ease.quadOut) : null);
-    //}
 	
 	public function enterScene(sceneID:SceneID, animate:Bool = true, args:Dynamic = null) {
 		trace('llega a enterScene con id $sceneID, animate $animate, args $args');
