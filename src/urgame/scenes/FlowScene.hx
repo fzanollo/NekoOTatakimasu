@@ -9,6 +9,7 @@ class FlowScene extends Scene
 {
 	private var baseEntity = new Entity(); //por ahora privado
 	private var ctx:NekoContext;
+	private var reusable = true;
 
 	public function new(ctx:NekoContext, opaque:Bool=true) {
 		super(opaque);
@@ -19,6 +20,10 @@ class FlowScene extends Scene
 		super.onAdded();
 		
 		owner.addChild(baseEntity);
+	}
+	
+	public function isReusable():Bool {
+		return reusable;
 	}
 	
 }
