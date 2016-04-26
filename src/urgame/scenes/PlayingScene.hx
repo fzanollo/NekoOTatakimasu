@@ -4,6 +4,7 @@ import flambe.display.ImageSprite;
 import flambe.display.TextSprite;
 import flambe.Entity;
 import flambe.System;
+import haxe.Json;
 import ui.ButtonBehaviour;
 import urgame.neko.LevelModel;
 import urgame.NekoContext;
@@ -16,7 +17,6 @@ class PlayingScene extends FlowScene
 	public function new(ctx:NekoContext, levelNumber:Int, opaque:Bool=true) {
 		super(ctx, opaque);
 		this.levelNumber = levelNumber;
-		this.reusable = false;
 	}
 	
 	override public function onAdded() {
@@ -52,13 +52,11 @@ class PlayingScene extends FlowScene
             ctx.flowManager.showPrompt(ctx.messages.get("paused"), [
                 "Play", function () {
                     // Unpause by unwinding to the original scene
-                    //ctx.flowManager.unwindToScene(baseEntity);
 					ctx.flowManager.backToPreviousScene();
 					level.unpause();
                 },
                 "Home", function () {
                     // Go back to the main menu, unwinding first so the transition looks right
-                    //ctx.flowManager.unwindToScene(baseEntity);
 					ctx.flowManager.backToPreviousScene();
                     ctx.flowManager.enterScene(SceneID.Home);
                 },
@@ -73,14 +71,12 @@ class PlayingScene extends FlowScene
 				ctx.flowManager.showPrompt(ctx.messages.get("you lose! and scored: "+level.score._), [
 					
 					"Replay", function () {
-						//ctx.flowManager.unwindToScene(baseEntity);
 						ctx.flowManager.backToPreviousScene();
-						//ctx.enterPlayingScene(levelNumber);
-						ctx.flowManager.enterScene(SceneID.Playing);
+						var args = Json.parse('{"levelNumber": $levelNumber}');
+						ctx.flowManager.enterScene(SceneID.Playing, true, args);
 					},
 					"Home", function () {
 						// Go back to the main menu, unwinding first so the transition looks right
-						//ctx.flowManager.unwindToScene(baseEntity);
 						ctx.flowManager.backToPreviousScene();
 						ctx.flowManager.enterScene(SceneID.Home);
 					},
@@ -94,14 +90,12 @@ class PlayingScene extends FlowScene
 				ctx.flowManager.showPrompt(ctx.messages.get("you win!"), [
 					
 					"Play", function () {
-						//ctx.flowManager.unwindToScene(baseEntity);
 						ctx.flowManager.backToPreviousScene();
-						//ctx.enterPlayingScene(levelNumber + 1); //TODO esto es por ahora, de hecho puede generar problemas (no se sabe el lvl max)
-						ctx.flowManager.enterScene(SceneID.Playing);
+						var args = Json.parse('{"levelNumber": ${levelNumber+1}}'); //TODO esto es por ahora, de hecho puede generar problemas (no se sabe el lvl max)
+						ctx.flowManager.enterScene(SceneID.Playing, true, args);
 					},
 					"Home", function () {
 						// Go back to the main menu, unwinding first so the transition looks right
-						//ctx.flowManager.unwindToScene(baseEntity);
 						ctx.flowManager.backToPreviousScene();
 						ctx.flowManager.enterScene(SceneID.Home);
 					},

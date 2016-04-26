@@ -95,7 +95,6 @@ class LevelSelectionScene extends FlowScene
 				var levelNumber = (2 * j + 1 * i) + 1;
 				
 				buttonBackground.pointerDown.connect(function(_) {
-					//ctx.enterPlayingScene(levelNumber);
 					var args = Json.parse('{"levelNumber": $levelNumber}');
 					ctx.flowManager.enterScene(SceneID.Playing, true, args);
 				});
@@ -103,7 +102,6 @@ class LevelSelectionScene extends FlowScene
 				var buttonText = new TextSprite(ctx.lightFont, Std.string(levelNumber));
 				buttonText.centerAnchor().setXY(buttonBackgroundWidth / 2, buttonBackgroundHeight / 2);
 				
-				//buttonEntity.addChild(new Entity().add(buttonBackground));
 				buttonEntity.add(buttonBackground);
 				buttonEntity.addChild(new Entity().add(buttonText));
 				
