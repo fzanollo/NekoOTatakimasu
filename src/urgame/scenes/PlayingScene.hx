@@ -16,6 +16,7 @@ class PlayingScene extends FlowScene
 	public function new(ctx:NekoContext, levelNumber:Int, opaque:Bool=true) {
 		super(ctx, opaque);
 		this.levelNumber = levelNumber;
+		this.reusable = false;
 	}
 	
 	override public function onAdded() {

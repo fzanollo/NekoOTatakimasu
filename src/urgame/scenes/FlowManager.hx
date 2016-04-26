@@ -10,13 +10,13 @@ import urgame.scenes.FlowManager.SceneID;
 class FlowManager
 {
 	/* SCENES */
-	//por ahora hay una variable para cada scene
+	//TODO por ahora hay una variable para cada scene
 	private var homeScene:HomeScene;
 	private var creditsScene:CreditsScene;
 	private var levelSelectionScene:LevelSelectionScene;
 	private var optionsScene:OptionsScene;
 	private var playingScene:PlayingScene;
-	//private var promptScene:PromptScene; //por ahora se hace como antes
+	//private var promptScene:PromptScene; //TODO por ahora se hace como antes
 	
 	private var director:Director;
 	private var ctx:NekoContext;
@@ -28,8 +28,17 @@ class FlowManager
 	
 	public function enterScene(sceneID:SceneID, animate:Bool = true, args:Dynamic = null) {
 		trace('llega a enterScene con id $sceneID, animate $animate, args $args');
-		director.unwindToScene(getScene(sceneID, args),
-			animate ? new SlideTransition(0.5, Ease.quadOut) : null);
+		var scene = getScene(sceneID, args);
+		
+		/* si hay una scene anterior y era reutilizable no llamarle al dispose! (i.e. dejarla en el stack de director) 
+		 * esto queda bien así? o es mejor si se crean todo el tiempo? */
+		if (director.topScene!= null && director.topScene.has(FlowScene) && director.topScene.get(FlowScene).isReusable()) {
+			director.pushScene(scene,
+				animate ? new SlideTransition(0.5, Ease.quadOut) : null);
+		} else {
+			director.unwindToScene(scene,
+				animate ? new SlideTransition(0.5, Ease.quadOut) : null);			
+		}
 	}
 
     public function showPrompt (text :String, buttons :Array<Dynamic>)
@@ -42,43 +51,39 @@ class FlowManager
 		director.popScene();
 	}
 	
-	//public function unwindToScene(scene:Entity) {
-		//director.unwindToScene(scene);
-	//}
-	
 	private function getScene(sceneID:SceneID, args:Dynamic):Entity {
 		switch (sceneID) {
 			case Home:
-				//if (homeScene == null) {
+				if (homeScene == null) {
 					homeScene = new HomeScene(ctx);
 					return new Entity().add(homeScene);
-				//} else {
-					//return homeScene.owner;
-				//}
+				} else {
+					return homeScene.owner;
+				}
 				
 			case Credits:
-				//if (creditsScene == null) {
+				if (creditsScene == null) {
 					creditsScene = new CreditsScene(ctx);
 					return new Entity().add(creditsScene);
-				//} else {
-					//return creditsScene.owner;
-				//}
+				} else {
+					return creditsScene.owner;
+				}
 				
 			case LevelSelection:
-				//if (levelSelectionScene == null) {
+				if (levelSelectionScene == null) {
 					levelSelectionScene = new LevelSelectionScene(ctx);
 					return new Entity().add(levelSelectionScene);
-				//} else {
-					//return levelSelectionScene.owner;
-				//}
+				} else {
+					return levelSelectionScene.owner;
+				}
 				
 			case Options:
-				//if (optionsScene == null) {
+				if (optionsScene == null) {
 					optionsScene = new OptionsScene(ctx);
 					return new Entity().add(optionsScene);
-				//} else {
-					//return optionsScene.owner;
-				//}
+				} else {
+					return optionsScene.owner;
+				}
 				
 			case Playing:
 				playingScene = new PlayingScene(ctx, args.levelNumber); //siempre es un scene nuevo, args debe contener levelNumber
