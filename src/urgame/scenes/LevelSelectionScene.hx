@@ -30,6 +30,19 @@ class LevelSelectionScene extends FlowScene
 		//make them choose hiragana or katakana
 		hiraganaOrKatakanaOption = createHiraganaOrKatakanaOptionPrompt();
 		baseEntity.addChild(hiraganaOrKatakanaOption);
+		
+		//add 'go back to home' button
+		var homeSprite = new ImageSprite(ctx.pack.getTexture('buttons/Home'));
+		homeSprite.setXY(System.stage.width - homeSprite.getNaturalWidth(), System.stage.height - homeSprite.getNaturalHeight());
+		
+		var homeBB = new ButtonBehaviour();
+		homeBB.setHandler(function(_) {
+			ctx.flowManager.enterScene(SceneID.Home);
+		});
+		
+		var homeButton = new Entity().add(homeSprite).add(homeBB);
+		
+		baseEntity.addChild(homeButton);
 	}
 	
 	private function createHiraganaOrKatakanaOptionPrompt():Entity {
@@ -86,7 +99,7 @@ class LevelSelectionScene extends FlowScene
 		var buttonTexture = ctx.pack.getTexture("buttons/ButtonBackground");
 		var maxLevel = (ctx.kanaManager.getSyllabary() == KanaManager.HIRAGANA) ? ctx.hiraganaMaxLevel : ctx.katakanaMaxLevel;
 		
-		var columnsQty = 4; //TODO calcular a partir de la cantidad de niveles
+		var columnsQty = 7; //TODO calcular a partir de la cantidad de niveles
 		
 		for (i in 0...maxLevel) {
 			var buttonEntity = new Entity();
@@ -108,14 +121,15 @@ class LevelSelectionScene extends FlowScene
 			buttonEntity.add(buttonBackground);
 			buttonEntity.addChild(new Entity().add(buttonText));
 			
-			trace('level number: $i, row: ${i/columnsQty}, column: ${i%columnsQty}');
+			var columnNumber = Math.floor(i % columnsQty);
+			var rowNumber = Math.floor(i / columnsQty);
 			
-			buttonEntity.get(ImageSprite).setXY(buttonBackgroundWidth * Math.floor(i%columnsQty), buttonBackgroundHeight * Math.floor(i/columnsQty));
+			buttonEntity.get(ImageSprite).setXY(buttonBackgroundWidth * columnNumber + 10 * columnNumber, buttonBackgroundHeight * rowNumber + 25 * rowNumber);
 			gridEntity.addChild(buttonEntity);
 		}
 		
 		//center the grid on the screen
-		gridEntity.add(new Sprite().setXY(15, 80)); //TODO calcular a partir de la cantidad de niveles
+		gridEntity.add(new Sprite().setXY(20, 60)); //TODO calcular a partir de la cantidad de niveles
 		
 		baseEntity.addChild(gridEntity);
 	}
