@@ -1,6 +1,7 @@
 package urgame.scenes;
 
 import flambe.display.ImageSprite;
+import flambe.display.Sprite;
 import flambe.display.TextSprite;
 import flambe.Entity;
 import flambe.System;
@@ -81,33 +82,41 @@ class LevelSelectionScene extends FlowScene
 	
 	private function makeButtonsGrid(syllabary:String) {
 		//add a button for each level
+		var gridEntity = new Entity();
 		var buttonTexture = ctx.pack.getTexture("buttons/ButtonBackground");
-		var halfLevels = Math.floor(ctx.hiraganaLevelMax/2);
+		var maxLevel = (ctx.kanaManager.getSyllabary() == KanaManager.HIRAGANA) ? ctx.hiraganaMaxLevel : ctx.katakanaMaxLevel;
 		
-		for (i in 0...halfLevels+1) {
-			for (j in 0...halfLevels+1) {
-				var buttonEntity = new Entity();
-				
-				var buttonBackground = new ImageSprite(buttonTexture);
-				var buttonBackgroundWidth = buttonBackground.getNaturalWidth();
-				var buttonBackgroundHeight = buttonBackground.getNaturalHeight();
-				
-				var levelNumber = (2 * j + 1 * i) + 1;
-				
-				buttonBackground.pointerDown.connect(function(_) {
-					var args = Json.parse('{"levelNumber": $levelNumber}');
-					ctx.flowManager.enterScene(SceneID.Playing, true, args);
-				});
-				
-				var buttonText = new TextSprite(ctx.lightFont, Std.string(levelNumber));
-				buttonText.centerAnchor().setXY(buttonBackgroundWidth / 2, buttonBackgroundHeight / 2);
-				
-				buttonEntity.add(buttonBackground);
-				buttonEntity.addChild(new Entity().add(buttonText));
-				
-				buttonEntity.get(ImageSprite).setXY(buttonBackgroundWidth * i, buttonBackgroundHeight * j);
-				baseEntity.addChild(buttonEntity);
-			}
+		var columnsQty = 4; //TODO calcular a partir de la cantidad de niveles
+		
+		for (i in 0...maxLevel) {
+			var buttonEntity = new Entity();
+			
+			var buttonBackground = new ImageSprite(buttonTexture);
+			var buttonBackgroundWidth = buttonBackground.getNaturalWidth(); //TODO calcular un resize a partir de la cantidad de niveles
+			var buttonBackgroundHeight = buttonBackground.getNaturalHeight();
+			
+			var levelNumber = i + 1;
+			
+			buttonBackground.pointerDown.connect(function(_) {
+				var args = Json.parse('{"levelNumber": $levelNumber}');
+				ctx.flowManager.enterScene(SceneID.Playing, true, args);
+			});
+			
+			var buttonText = new TextSprite(ctx.lightFont, Std.string(levelNumber));
+			buttonText.centerAnchor().setXY(buttonBackgroundWidth / 2, buttonBackgroundHeight / 2);
+			
+			buttonEntity.add(buttonBackground);
+			buttonEntity.addChild(new Entity().add(buttonText));
+			
+			trace('level number: $i, row: ${i/columnsQty}, column: ${i%columnsQty}');
+			
+			buttonEntity.get(ImageSprite).setXY(buttonBackgroundWidth * Math.floor(i%columnsQty), buttonBackgroundHeight * Math.floor(i/columnsQty));
+			gridEntity.addChild(buttonEntity);
 		}
+		
+		//center the grid on the screen
+		gridEntity.add(new Sprite().setXY(15, 80)); //TODO calcular a partir de la cantidad de niveles
+		
+		baseEntity.addChild(gridEntity);
 	}
 }
