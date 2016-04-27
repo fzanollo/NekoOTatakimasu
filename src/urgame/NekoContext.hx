@@ -33,10 +33,10 @@ class NekoContext
 	
 	/** Levels info */
 	public var hiraganaLevelsInfo:Dynamic;
-	public var hiraganaLevelMax:Int = 1;
+	public var hiraganaMaxLevel:Int = 1;
 	
 	public var katakanaLevelsInfo:Dynamic;
-	public var katakanaLevelMax:Int = 1;
+	public var katakanaMaxLevel:Int = 1;
 	
 	/** KanaManager */
 	public var kanaManager:KanaManager = new KanaManager();
@@ -51,10 +51,10 @@ class NekoContext
         this.japanFont = new Font(pack, "fonts/japanFont");
 		
 		this.hiraganaLevelsInfo = Json.parse(pack.getFile("HiraganaLevels.json").toString());
-		this.hiraganaLevelMax = getLevelMax(hiraganaLevelsInfo);
+		this.hiraganaMaxLevel = getLevelMax(hiraganaLevelsInfo);
 		
 		this.katakanaLevelsInfo = Json.parse(pack.getFile("KatakanaLevels.json").toString());
-		this.katakanaLevelMax = getLevelMax(katakanaLevelsInfo);
+		this.katakanaMaxLevel = getLevelMax(katakanaLevelsInfo);
     }
 	
 	private function getLevelMax(levelsInfo:Dynamic):Int {
