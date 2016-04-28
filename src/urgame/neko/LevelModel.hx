@@ -193,7 +193,7 @@ class LevelModel extends Component
 	}
 	
 	private function nekoMaker() {
-		var nekoComponent = new NekoComponent(levelInfo.nekoMaxSpeed, if (score._ < levelInfo.goal/2){ctx.kanaManager.getRandomNewKana();}else{ctx.kanaManager.getRandomCurrentKana();}, ctx);
+		var nekoComponent = new NekoComponent(levelInfo.nekoMinSpeed,levelInfo.nekoMaxSpeed, if (score._ < levelInfo.goal/2){ctx.kanaManager.getRandomNewKana();}else{ctx.kanaManager.getRandomCurrentKana();}, ctx);
 		var neko = new Entity().add(nekoComponent);
 		
 		//add to objects array
