@@ -2,6 +2,7 @@ package urgame.scenes;
 
 import flambe.animation.Ease;
 import flambe.Entity;
+import flambe.display.Font;
 import flambe.scene.Director;
 import flambe.scene.SlideTransition;
 import urgame.NekoContext;
@@ -31,9 +32,9 @@ class FlowManager
 			animate ? new SlideTransition(0.5, Ease.quadOut) : null);
 	}
 
-    public function showPrompt (text :String, buttons :Array<Dynamic>)
+    public function showPrompt (text :String, buttons :Array<Dynamic>,font:Font,?scale:Float)
     {
-        director.pushScene(PromptScene.create(ctx, text, buttons));
+        director.pushScene(PromptScene.create(ctx, text, buttons,font,scale));
     }
 	
 	//director has to have a previous scene to pop to, be aware of that!
