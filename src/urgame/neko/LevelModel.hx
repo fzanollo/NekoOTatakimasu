@@ -98,8 +98,8 @@ class LevelModel extends Component
 	
 	private function createInputTextAndManager() {
 		// add ui input text sprite
-		inputUITextSprite = new TextSprite(ctx.lightFont, "");
-		inputUITextSprite.setXY(System.stage.width / 2 - 40, System.stage.height - ctx.lightFont.size - 10);
+		inputUITextSprite = new TextSprite(ctx.lightSmallFont, "");
+		inputUITextSprite.setXY(System.stage.width / 2 - 40, System.stage.height - ctx.lightSmallFont.size - 10);
 		gameUILayer.addChild(new Entity().add(inputUITextSprite));
 		
 		//input management
