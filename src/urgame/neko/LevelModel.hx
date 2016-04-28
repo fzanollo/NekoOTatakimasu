@@ -4,7 +4,6 @@ import flambe.Component;
 import flambe.display.ImageSprite;
 import flambe.display.TextSprite;
 import flambe.Entity;
-import flambe.input.Key;
 import flambe.script.CallFunction;
 import flambe.script.Delay;
 import flambe.script.Repeat;
@@ -46,6 +45,10 @@ class LevelModel extends Component
 	private var levelNumber:Int;
 	private var enterPressedSignalConnection:SignalConnection;
 	private var currentInputSignalConnection:SignalConnection;
+	
+	//Spawn at random times
+	private var spawnTime:Float = 1;
+	private var counter:Float = 0;
 
     public function new (ctx :NekoContext, levelNumber:Int){
         this.ctx = ctx;
@@ -76,14 +79,6 @@ class LevelModel extends Component
         backgroundLayer.addChild(nekoLayer = new Entity());
         backgroundLayer.addChild(kanaLayer = new Entity());
         backgroundLayer.addChild(gameUILayer = new Entity());
-		
-		//spawn script
-		var spawnScript = new Script();
-		worldLayer.add(spawnScript);
-		spawnScript.run(new Repeat(new Sequence([
-			new Delay(levelInfo.nekoMinSpawnTime), //TODO cambiar la forma de spawnear para poder tener spawnTimes random
-			new CallFunction(nekoMaker)
-		])));
 		
 		createInputTextAndManager(); //nombre de mierda, cambiar
     }
@@ -146,11 +141,21 @@ class LevelModel extends Component
 			}
 		}
 	}
-
+	
     override public function onUpdate (dt :Float)
     {
 		checkForLifeLost();
 		nekoRemover();
+		
+		/* SPAWN NEKO */
+		counter += dt;
+		
+		if (counter > spawnTime) {
+			counter = 0;
+			spawnTime = levelInfo.nekoMinSpawnTime + Std.random(Math.floor(levelInfo.nekoMaxSpawnTime - levelInfo.nekoMinSpawnTime));
+			//trace('TIMER OUT NEXT TIMER = $spawnTime current time = ${Date.now()}');
+			nekoMaker();
+		}
     }
 	
 	private function checkForLifeLost() {
