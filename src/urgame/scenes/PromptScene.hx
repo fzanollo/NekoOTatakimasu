@@ -4,6 +4,7 @@ import flambe.Entity;
 import flambe.System;
 import flambe.animation.Ease;
 import flambe.display.FillSprite;
+import flambe.display.Font;
 import flambe.display.ImageSprite;
 import flambe.display.Sprite;
 import flambe.display.TextSprite;
@@ -15,7 +16,7 @@ import ui.ButtonBehaviour;
 class PromptScene
 {
     /** Creates a scene that shows a menu prompt. */
-    public static function create (ctx :NekoContext, text :String, buttons :Array<Dynamic>) :Entity
+    public static function create (ctx :NekoContext, text :String, buttons :Array<Dynamic>, font:Font, ?scale:Float) :Entity
     {
         var scene = new Entity();
         scene.add(new Scene(false));
@@ -24,7 +25,10 @@ class PromptScene
         background.alpha.animate(0, 0.5, 0.5);
         scene.addChild(new Entity().add(background));
 		
-        var label = new TextSprite(ctx.lightFont, text);
+        var label = new TextSprite(font, text);
+		if (scale != null) {
+			label.setScale(scale);
+		}
         label.setWrapWidth(System.stage.width).setAlign(Center);
         label.x.animate(-System.stage.width, 0, 0.5, Ease.backOut);
         label.y._ = System.stage.height/2 - 150;

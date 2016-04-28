@@ -93,12 +93,16 @@ class LevelModel extends Component
 		
 		//shows info prompt
 		this.pause();
-		ctx.flowManager.showPrompt(" texto informativo del nivel \n n° "+levelNumber, [
+		var infolabel = '';
+		for (kana in levelInfo.kanas) {
+			infolabel += ctx.kanaManager.getRomanji(kana)+' = '+kana+' ,';
+		}
+		ctx.flowManager.showPrompt(infolabel, [
 				"Play", function () {
                     // Unpause by unwinding to the original scene
                     ctx.flowManager.backToPreviousScene();
 					this.unpause();
-                }]);
+                }],ctx.japanFont,0.6);
 	}
 	
 	private function createInputTextAndManager() {
@@ -189,7 +193,7 @@ class LevelModel extends Component
 	}
 	
 	private function nekoMaker() {
-		var nekoComponent = new NekoComponent(levelInfo.nekoMaxSpeed, ctx.kanaManager.getRandomNewKana(), ctx);
+		var nekoComponent = new NekoComponent(levelInfo.nekoMaxSpeed, if (score._ < levelInfo.goal/2){ctx.kanaManager.getRandomNewKana();}else{ctx.kanaManager.getRandomCurrentKana();}, ctx);
 		var neko = new Entity().add(nekoComponent);
 		
 		//add to objects array
