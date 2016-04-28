@@ -50,6 +50,14 @@ class KanaManager
 		return oldKana[Std.random(oldKana.length)];
 	}
 	
+	public function getRandomCurrentKana():String {
+		if (Std.random(2) == 1) {
+			return newKana[Std.random(newKana.length)];
+		} else {
+			return oldKana[Std.random(oldKana.length)];
+		}
+	}
+	
 	public function getRandomKanaFromAll():String {
 		if (syllabaryInUse == HIRAGANA) {
 			return getRandomElement(romanjiToHiragana);

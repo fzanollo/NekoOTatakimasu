@@ -95,7 +95,7 @@ class LevelModel extends Component
 		this.pause();
 		var infolabel = '';
 		for (kana in levelInfo.kanas) {
-			infolabel += ctx.kanaManager.getRomanji(kana)+' = '+kana+'\n';
+			infolabel += ctx.kanaManager.getRomanji(kana)+' = '+kana+' ,';
 		}
 		ctx.flowManager.showPrompt(infolabel, [
 				"Play", function () {
@@ -193,7 +193,7 @@ class LevelModel extends Component
 	}
 	
 	private function nekoMaker() {
-		var nekoComponent = new NekoComponent(levelInfo.nekoMaxSpeed, ctx.kanaManager.getRandomNewKana(), ctx);
+		var nekoComponent = new NekoComponent(levelInfo.nekoMaxSpeed, if (score._ < levelInfo.goal/2){ctx.kanaManager.getRandomNewKana();}else{ctx.kanaManager.getRandomCurrentKana();}, ctx);
 		var neko = new Entity().add(nekoComponent);
 		
 		//add to objects array
