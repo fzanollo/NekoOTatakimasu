@@ -27,7 +27,7 @@ class PlayingScene extends FlowScene
         baseEntity.add(level);
 		
         // Show a score label on the top left
-        var scoreLabel = new TextSprite(ctx.lightFont);
+        var scoreLabel = new TextSprite(ctx.lightSmallFont);
         scoreLabel.setXY(5, 5);
         level.score.watch(function (score,_) {
             scoreLabel.text = score + ' of ${level.levelInfo.goal}';
@@ -35,7 +35,7 @@ class PlayingScene extends FlowScene
         baseEntity.addChild(new Entity().add(scoreLabel));
 		
 		// Show a lives label on the top right
-        var livesLabel = new TextSprite(ctx.lightFont);
+        var livesLabel = new TextSprite(ctx.lightSmallFont);
         level.lives.watch(function (lives,_) {
             livesLabel.text = "lives: "+lives;
         });

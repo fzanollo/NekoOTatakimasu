@@ -115,7 +115,7 @@ class LevelSelectionScene extends FlowScene
 				ctx.flowManager.enterScene(SceneID.Playing, true, args);
 			});
 			
-			var buttonText = new TextSprite(ctx.lightFont, Std.string(levelNumber));
+			var buttonText = new TextSprite(ctx.darkFont, Std.string(levelNumber));
 			buttonText.centerAnchor().setXY(buttonBackgroundWidth / 2, buttonBackgroundHeight / 2);
 			
 			buttonEntity.add(buttonBackground);
