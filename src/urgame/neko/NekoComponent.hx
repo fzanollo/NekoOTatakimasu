@@ -21,7 +21,7 @@ class NekoComponent extends Component
 	
 	private var ctx :NekoContext;
 	
-	public function new(maxSpeed:Int, kana:String, ctx :NekoContext) {
+	public function new(minSpeed:Int,maxSpeed:Int, kana:String, ctx :NekoContext) {
 		this.ctx = ctx;
 		entity = new Entity();
 		
@@ -35,7 +35,7 @@ class NekoComponent extends Component
 		textSprite = new TextSprite(ctx.japanFont, kana);
 		textSprite.centerAnchor().setXY(imageSprite.getNaturalWidth() / 2, imageSprite.getNaturalHeight() / 2);
 		
-		speed = Std.random(maxSpeed) + 1;
+		speed = minSpeed + Std.random(maxSpeed-minSpeed);
 	}
 	
 	public function move() { moving = true; }

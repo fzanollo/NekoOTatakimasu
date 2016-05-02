@@ -4,7 +4,6 @@ import flambe.Component;
 import flambe.display.ImageSprite;
 import flambe.display.TextSprite;
 import flambe.Entity;
-import flambe.input.Key;
 import flambe.script.CallFunction;
 import flambe.script.Delay;
 import flambe.script.Repeat;
@@ -46,6 +45,10 @@ class LevelModel extends Component
 	private var levelNumber:Int;
 	private var enterPressedSignalConnection:SignalConnection;
 	private var currentInputSignalConnection:SignalConnection;
+	
+	//Spawn at random times
+	private var spawnTime:Float = 1;
+	private var counter:Float = 0;
 
     public function new (ctx :NekoContext, levelNumber:Int){
         this.ctx = ctx;
@@ -77,14 +80,6 @@ class LevelModel extends Component
         backgroundLayer.addChild(kanaLayer = new Entity());
         backgroundLayer.addChild(gameUILayer = new Entity());
 		
-		//spawn script
-		var spawnScript = new Script();
-		worldLayer.add(spawnScript);
-		spawnScript.run(new Repeat(new Sequence([
-			new Delay(levelInfo.nekoMinSpawnTime), //TODO cambiar la forma de spawnear para poder tener spawnTimes random
-			new CallFunction(nekoMaker)
-		])));
-		
 		createInputTextAndManager(); //nombre de mierda, cambiar
     }
 	
@@ -93,18 +88,22 @@ class LevelModel extends Component
 		
 		//shows info prompt
 		this.pause();
-		ctx.flowManager.showPrompt(" texto informativo del nivel \n n° "+levelNumber, [
+		var infolabel = '';
+		for (kana in levelInfo.kanas) {
+			infolabel += ctx.kanaManager.getRomanji(kana)+' = '+kana+' ,';
+		}
+		ctx.flowManager.showPrompt(infolabel, [
 				"Play", function () {
                     // Unpause by unwinding to the original scene
                     ctx.flowManager.backToPreviousScene();
 					this.unpause();
-                }]);
+                }],ctx.japanFont,0.6);
 	}
 	
 	private function createInputTextAndManager() {
 		// add ui input text sprite
-		inputUITextSprite = new TextSprite(ctx.lightFont, "");
-		inputUITextSprite.setXY(System.stage.width / 2 - 40, System.stage.height - ctx.lightFont.size - 10);
+		inputUITextSprite = new TextSprite(ctx.lightSmallFont, "");
+		inputUITextSprite.setXY(System.stage.width / 2 - 40, System.stage.height - ctx.lightSmallFont.size - 10);
 		gameUILayer.addChild(new Entity().add(inputUITextSprite));
 		
 		//input management
@@ -146,11 +145,21 @@ class LevelModel extends Component
 			}
 		}
 	}
-
+	
     override public function onUpdate (dt :Float)
     {
 		checkForLifeLost();
 		nekoRemover();
+		
+		/* SPAWN NEKO */
+		counter += dt;
+		
+		if (counter > spawnTime) {
+			counter = 0;
+			spawnTime = levelInfo.nekoMinSpawnTime + Std.random(Math.floor(levelInfo.nekoMaxSpawnTime - levelInfo.nekoMinSpawnTime));
+			//trace('TIMER OUT NEXT TIMER = $spawnTime current time = ${Date.now()}');
+			nekoMaker();
+		}
     }
 	
 	private function checkForLifeLost() {
@@ -189,7 +198,7 @@ class LevelModel extends Component
 	}
 	
 	private function nekoMaker() {
-		var nekoComponent = new NekoComponent(levelInfo.nekoMaxSpeed, ctx.kanaManager.getRandomNewKana(), ctx);
+		var nekoComponent = new NekoComponent(levelInfo.nekoMinSpeed,levelInfo.nekoMaxSpeed, if (score._ < levelInfo.goal/2){ctx.kanaManager.getRandomNewKana();}else{ctx.kanaManager.getRandomCurrentKana();}, ctx);
 		var neko = new Entity().add(nekoComponent);
 		
 		//add to objects array

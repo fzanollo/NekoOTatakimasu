@@ -1,6 +1,8 @@
 package urgame.scenes;
 
+import flambe.display.FillSprite;
 import flambe.display.ImageSprite;
+import flambe.display.TextSprite;
 import flambe.Entity;
 import flambe.System;
 import ui.ButtonBehaviour;
@@ -19,6 +21,14 @@ class HomeScene extends FlowScene
 		//Background
         var background = new ImageSprite(ctx.pack.getTexture("menu_background"));
         baseEntity.addChild(new Entity().add(background));
+		
+		//Title label
+		var label = new TextSprite(ctx.lightFont, "ねこをたたきます！");
+        label.setWrapWidth(System.stage.width).setXY(0, 5);
+		
+		var labelBackground = new FillSprite(0x000000, 500, label.getNaturalHeight() + 10);
+		labelBackground.setXY(73, System.stage.height / 3 - 120);
+		baseEntity.addChild(new Entity().add(labelBackground).addChild(new Entity().add(label)));
 		
 		//Play button
 		var play = new Entity();

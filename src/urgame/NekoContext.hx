@@ -22,6 +22,7 @@ class NekoContext
     public var messages (default, null) :MessageBundle;
 	
     public var lightFont (default, null) :Font;
+    public var lightSmallFont (default, null) :Font;
     public var darkFont (default, null) :Font;
 	public var japanFont (default, null) :Font;
 
@@ -33,10 +34,10 @@ class NekoContext
 	
 	/** Levels info */
 	public var hiraganaLevelsInfo:Dynamic;
-	public var hiraganaLevelMax:Int = 1;
+	public var hiraganaMaxLevel:Int = 1;
 	
 	public var katakanaLevelsInfo:Dynamic;
-	public var katakanaLevelMax:Int = 1;
+	public var katakanaMaxLevel:Int = 1;
 	
 	/** KanaManager */
 	public var kanaManager:KanaManager = new KanaManager();
@@ -47,14 +48,15 @@ class NekoContext
 		
         this.messages = MessageBundle.parse(localePack.getFile("messages.ini").toString());
         this.lightFont = new Font(pack, "fonts/Light");
+        this.lightSmallFont = new Font(pack, "fonts/LightSmall");
         this.darkFont = new Font(pack, "fonts/Dark");
         this.japanFont = new Font(pack, "fonts/japanFont");
 		
 		this.hiraganaLevelsInfo = Json.parse(pack.getFile("HiraganaLevels.json").toString());
-		this.hiraganaLevelMax = getLevelMax(hiraganaLevelsInfo);
+		this.hiraganaMaxLevel = getLevelMax(hiraganaLevelsInfo);
 		
 		this.katakanaLevelsInfo = Json.parse(pack.getFile("KatakanaLevels.json").toString());
-		this.katakanaLevelMax = getLevelMax(katakanaLevelsInfo);
+		this.katakanaMaxLevel = getLevelMax(katakanaLevelsInfo);
     }
 	
 	private function getLevelMax(levelsInfo:Dynamic):Int {

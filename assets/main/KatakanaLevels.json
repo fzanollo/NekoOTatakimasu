@@ -78,5 +78,141 @@
         "maxSpeed" : 6,
         "goal" : 200,
         "kanas" : ["ワ","ヲ","ン"]
+    },
+    "11" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ガ","ギ","グ","ゲ","ゴ"]
+    },
+    "12" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ザ","ジ","ズ","ゼ","ゾ"]
+    },
+    "13" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ダ","ヂ","ヅ","デ","ド"]
+    },
+    "14" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["バ","ビ","ブ","ベ","ボ"]
+    },
+    "15" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["パ","ピ","プ","ペ","ポ"]
+    },
+    "16" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["キャ","キュ","キョ"]
+    },
+    "17" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["シャ","シュ","ショ"]
+    },
+    "18" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["チャ","チュ","チョ"]
+    },
+    "19" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ニャ","ニュ","ニョ"]
+    },
+    "20" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ヒャ","ヒュ","ヒョ"]
+    },
+    "21" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ミャ","ミュ","ミョ"]
+    },
+    "22" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["リャ","リュ","リョ"]
+    },
+    "23" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ギャ","ギュ","ギョ"]
+    },
+    "24" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ジャ","ジュ","ジョ"]
+    },
+    "25" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ヂャ","ヂュ","ヂョ"]
+    },
+    "26" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ビャ","ビュ","ビョ"]
+    },
+    "27" : {
+        "minSpawnTime" : 2,
+        "maxSpawnTime" : 5,
+        "minSpeed" : 4,
+        "maxSpeed" : 6,
+        "goal" : 200,
+        "kanas" : ["ピャ","ピュ","ピョ"]
     }
 }
