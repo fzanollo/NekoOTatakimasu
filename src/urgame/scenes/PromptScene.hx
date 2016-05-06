@@ -25,17 +25,24 @@ class PromptScene
         background.alpha.animate(0, 0.5, 0.5);
         scene.addChild(new Entity().add(background));
 		
+		var labelBackground = new FillSprite(0x000000, System.stage.width, 0);
+		labelBackground.alpha.animate(0, 0.5, 0.5);
+        
+		
         var label = new TextSprite(font, text);
 		if (scale != null) {
 			label.setScale(scale);
+			label.setXY(System.stage.width / 2 - label.getNaturalWidth() * scale / 2, System.stage.height / 2 - 150);
+			label.x.animate( -System.stage.width,System.stage.width / 2 - label.getNaturalWidth() * scale / 2, 0.5, Ease.backOut);
+			labelBackground.height._ = label.getNaturalHeight() * scale + 20;
+		} else {
+			label.setWrapWidth(System.stage.width).setAlign(Center);
+			label.x.animate(-System.stage.width, 0, 0.5, Ease.backOut);
+			label.y._ = System.stage.height / 2 - 150;
+			labelBackground.height._ = label.getNaturalHeight() + 40;
 		}
-        label.setWrapWidth(System.stage.width).setAlign(Center);
-        label.x.animate(-System.stage.width, 0, 0.5, Ease.backOut);
-        label.y._ = System.stage.height/2 - 150;
 		
-        var labelBackground = new FillSprite(0x000000, System.stage.width, label.getNaturalHeight()+5);
-        labelBackground.alpha.animate(0, 0.5, 0.5);
-        labelBackground.y._ = label.y._;
+		labelBackground.y._ = label.y._ - 20;
 		
         scene.addChild(new Entity().add(labelBackground));
         scene.addChild(new Entity().add(label));
@@ -64,9 +71,15 @@ class PromptScene
 		
         var bounds = Sprite.getBounds(row);
         var sprite = new Sprite();
-        sprite.x.animate(System.stage.width, System.stage.width/2 - bounds.width/2, 0.5, Ease.backOut);
-        sprite.y._ = label.y._ + label.getNaturalHeight() + 50;
+        sprite.x.animate(System.stage.width, System.stage.width / 2 - bounds.width / 2, 0.5, Ease.backOut);
+		if (scale != null) {
+			sprite.y._ = label.y._ + label.getNaturalHeight()*scale + 20;
 		
+		} else {
+			sprite.y._ = label.y._ + label.getNaturalHeight() + 50;
+		
+		}
+        
         scene.addChild(row.add(sprite));
 		
         return scene;

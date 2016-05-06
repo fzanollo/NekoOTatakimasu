@@ -61,7 +61,6 @@ class LevelModel extends Component
 		/* get Level info */
 		levelInfo = new LevelInfo(Reflect.field((ctx.kanaManager.getSyllabary() == KanaManager.HIRAGANA) ? ctx.hiraganaLevelsInfo : ctx.katakanaLevelsInfo, Std.string(levelNumber)));
 		
-		ctx.kanaManager.setSyllabary(KanaManager.HIRAGANA);
 		ctx.kanaManager.setNewKanas(levelInfo.kanas);
 		//TODO every new lvl shows only new kana
 		
@@ -90,7 +89,8 @@ class LevelModel extends Component
 		this.pause();
 		var infolabel = '';
 		for (kana in levelInfo.kanas) {
-			infolabel += ctx.kanaManager.getRomanji(kana)+' = '+kana+' ,';
+			infolabel += '${ctx.kanaManager.getRomanji(kana)} = $kana\n';
+			
 		}
 		ctx.flowManager.showPrompt(infolabel, [
 				"Play", function () {
