@@ -60,7 +60,7 @@ class PlayingScene extends FlowScene
 					ctx.flowManager.backToPreviousScene();
                     ctx.flowManager.enterScene(SceneID.Home);
                 },
-            ]);
+            ],ctx.lightFont);
         });
 		pause.add(pauseSprite).add(pauseBehaviour);
         baseEntity.addChild(pause);
@@ -80,7 +80,7 @@ class PlayingScene extends FlowScene
 						ctx.flowManager.backToPreviousScene();
 						ctx.flowManager.enterScene(SceneID.Home);
 					},
-            ]);
+            ],ctx.lightFont);
 			}
 		});
 		
@@ -99,7 +99,7 @@ class PlayingScene extends FlowScene
 						ctx.flowManager.backToPreviousScene();
 						ctx.flowManager.enterScene(SceneID.Home);
 					},
-				]);
+				],ctx.lightFont);
 			}
 		});
 	}

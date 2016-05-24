@@ -8,6 +8,7 @@ import flambe.display.Font;
 import flambe.display.ImageSprite;
 import flambe.display.Sprite;
 import flambe.display.TextSprite;
+import flambe.input.KeyboardEvent;
 import flambe.scene.Scene;
 import flambe.util.Promise;
 import urgame.NekoContext;
@@ -67,6 +68,8 @@ class PromptScene
             x += buttonSprite.getNaturalWidth() + 20;
 			button.add(buttonSprite).add(buttonBehaviour);
             row.addChild(button);
+			
+			
         }
 		
         var bounds = Sprite.getBounds(row);

@@ -37,6 +37,7 @@ class FlowManager
         director.pushScene(PromptScene.create(ctx, text, buttons,font,scale));
     }
 	
+	
 	//director has to have a previous scene to pop to, be aware of that!
 	public function backToPreviousScene (){
 		director.popScene();
